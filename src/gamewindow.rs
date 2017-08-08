@@ -1,8 +1,19 @@
 use sfml::graphics::*;
 use sfml::window::*;
+use sfml::system::Vector2f;
 
 const TITLE: &'static str = "#survive";
 const DEFAULT_SIZE: (u32, u32) = (800, 600);
+
+/*
+#[derive(Clone, Copy)]
+pub enum ScrollDir {
+    Up,
+    Left,
+    Down,
+    Right,
+}
+*/
 
 pub struct GameWindow {
     pub rwin: RenderWindow,
@@ -20,5 +31,9 @@ impl GameWindow {
         GameWindow {
             rwin,
         }
+    }
+    
+    pub fn scroll(&mut self, dir: Vector2f) {
+        let view = self.rwin.view().to_owned();
     }
 }
