@@ -28,11 +28,14 @@ fn main() {
                 Event::KeyPressed { code: Key::Escape, .. }
                         => break 'mainl,
                 Event::Closed => break 'mainl,
+                Event::MouseMoved { x, y } => {
+                    player.on_mouse_move(&win.rwin, x, y);
+                },
                 _ => {},
             }
         }
         
-        match player.handle_keys_realtime(delta) {
+        match player.update(delta) {
             Some(s) => win.scroll(s),
             _ => {}
         };
