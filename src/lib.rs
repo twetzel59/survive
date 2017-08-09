@@ -1,7 +1,8 @@
 extern crate sfml;
 
 pub use gamewindow::GameWindow;
-pub use mousehandler::MouseMoveHandler;
+pub use gamewindow::ScrollBounds;
+pub use mousehandler::MousePosHandler;
 pub use player::Player;
 pub use resources::Resources;
 

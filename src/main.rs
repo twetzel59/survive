@@ -3,7 +3,7 @@ extern crate survive;
 
 use sfml::graphics::*;
 use sfml::window::*;
-use sfml::system::Clock;
+use sfml::system::{Clock, Vector2i};
 use survive::*;
 
 fn main() {
@@ -28,15 +28,15 @@ fn main() {
                 Event::KeyPressed { code: Key::Escape, .. }
                         => break 'mainl,
                 Event::Closed => break 'mainl,
-                Event::MouseMoved { x, y } => {
-                    player.on_mouse_move(&win.rwin, x, y);
-                },
                 _ => {},
             }
         }
         
-        match player.update(delta) {
-            Some(s) => win.scroll(s),
+        let Vector2i { x: mx, y: my } = win.rwin.mouse_position();
+        player.mouse_pos(&win.rwin, mx, my);
+        
+        match player.update(delta, &win) {
+            Some(s) => win.scroll(&s),
             _ => {}
         };
     }

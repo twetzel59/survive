@@ -1,6 +1,6 @@
 use sfml::graphics::*;
 use sfml::window::*;
-use sfml::system::{Vector2i, Vector2f};
+use sfml::system::{Vector2i, Vector2f, Vector2u};
 
 const TITLE: &'static str = "#survive";
 const DEFAULT_SIZE: (u32, u32) = (800, 600);
@@ -41,7 +41,27 @@ impl GameWindow {
         }
     }
     
-    pub fn scroll(&mut self, dir: Vector2f) {
-        let view = self.rwin.view().to_owned();
+    pub fn scroll(&mut self, dir: &Vector2f) {
+        let mut view = self.rwin.view().to_owned();
+        view.move_(dir);
     }
+    
+    pub fn scroll_bounds(&self, bound: f32) -> ScrollBounds {
+        let Vector2u { x: sx, y: sy } = self.rwin.size();
+        let size = Vector2f::new(sx as f32, sy as f32);
+        
+        ScrollBounds {
+            left: FloatRect::new(0., 0., bound, size.y),
+            top: FloatRect::new(0., 0., size.x, bound),
+            bottom: FloatRect::new(0., size.y - bound, size.x, bound),
+            right: FloatRect::new(size.x - bound, 0., bound, size.y),
+        }
+    }
+}
+
+pub struct ScrollBounds {
+    pub left: FloatRect,
+    pub top: FloatRect,
+    pub bottom: FloatRect,
+    pub right: FloatRect,
 }
