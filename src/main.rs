@@ -15,11 +15,16 @@ fn main() {
     
     let mut player = Player::new(&res);
     
+    let tex = Texture::from_file("test.png").unwrap();
+    let mut test = Sprite::with_texture(&tex);
+    test.set_scale2f(100., 100.);
+    
     let mut clock = Clock::start();
     'mainl: loop {
         let delta = clock.restart().as_seconds();
         
         win.rwin.clear(&Color::black());
+        win.rwin.draw(&test);
         win.rwin.draw(&player);
         win.rwin.display();
         
@@ -37,7 +42,7 @@ fn main() {
         
         match player.update(delta, &win) {
             Some(s) => win.scroll(&s),
-            _ => {}
+            None => {},
         };
     }
 }

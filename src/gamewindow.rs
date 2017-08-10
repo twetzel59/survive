@@ -44,6 +44,7 @@ impl GameWindow {
     pub fn scroll(&mut self, dir: &Vector2f) {
         let mut view = self.rwin.view().to_owned();
         view.move_(dir);
+        self.rwin.set_view(&view);
     }
     
     pub fn scroll_bounds(&self, bound: f32) -> ScrollBounds {

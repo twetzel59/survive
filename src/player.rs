@@ -37,24 +37,6 @@ impl<'s> Player<'s> {
     }
     
     fn handle_keys_realtime(&mut self, delta: f32, bounds: &ScrollBounds, target: &RenderTarget) -> Option<Vector2f> {
-        let rot = self.sprite.rotation().to_radians();
-        
-        if Key::W.is_pressed() {
-            self.sprite.move2f(rot.sin() * delta * SPEED, rot.cos() * delta * -SPEED);
-            //self.sprite.move2f(0., delta * -SPEED);
-        } else if Key::S.is_pressed() {
-            self.sprite.move2f(rot.sin() * delta * -SPEED, rot.cos() * delta * SPEED);
-            //self.sprite.move2f(0., delta * SPEED);
-        }
-        
-        if Key::A.is_pressed() {
-            self.sprite.move2f(rot.cos() * delta * -SPEED, rot.sin() * delta * -SPEED);
-            //self.sprite.move2f(delta * -SPEED, 0.);
-        } else if Key::D.is_pressed() {
-            self.sprite.move2f(rot.cos() * delta * SPEED, rot.sin() * delta * SPEED);
-            //self.sprite.move2f(delta * SPEED, 0.);
-        }
-        
         //let pixel = target.map_coords_to_pixel_current_view(&pos);
         
         let mut rect = self.sprite.global_bounds();
@@ -65,19 +47,75 @@ impl<'s> Player<'s> {
         
         //println!("{:?}", rect);
         
+        let mut scroll_left = false;
+        let mut scroll_right = false;
+        let mut scroll_up = false;
+        let mut scroll_down = false;
+        
         if bounds.left.intersection(&rect).is_some() {
             println!("scroll left");
+            scroll_left = true;
         } else if bounds.right.intersection(&rect).is_some() {
             println!("scroll right");
+            scroll_right = true;
         }
         
         if bounds.top.intersection(&rect).is_some() {
             println!("scroll up");
+            scroll_up = true;
         } else if bounds.bottom.intersection(&rect).is_some() {
             println!("scroll down");
+            scroll_down = true;
         }
         
-        None
+        //
+        
+        let rot = self.sprite.rotation().to_radians();
+        let mut change = Vector2f::new(0., 0.);
+        
+        if Key::W.is_pressed() {
+            //self.sprite.move2f(rot.sin() * delta * SPEED, rot.cos() * delta * -SPEED);
+            change.x += rot.sin() * delta * SPEED;
+            change.y += rot.cos() * delta * -SPEED;
+            
+            //self.sprite.move2f(0., delta * -SPEED);
+        } else if Key::S.is_pressed() {
+            //self.sprite.move2f(rot.sin() * delta * -SPEED, rot.cos() * delta * SPEED);
+            change.x += rot.sin() * delta * -SPEED;
+            change.y += rot.cos() * delta * SPEED;
+            
+            //self.sprite.move2f(0., delta * SPEED);
+        }
+        
+        if Key::A.is_pressed() {
+            //self.sprite.move2f(rot.cos() * delta * -SPEED, rot.sin() * delta * -SPEED);
+            change.x += rot.cos() * delta * -SPEED;
+            change.y += rot.sin() * delta * -SPEED;
+            
+            //self.sprite.move2f(delta * -SPEED, 0.);
+        } else if Key::D.is_pressed() {
+            //self.sprite.move2f(rot.cos() * delta * SPEED, rot.sin() * delta * SPEED);
+            change.x += rot.cos() * delta * SPEED;
+            change.y += rot.sin() * delta * SPEED;
+            
+            //self.sprite.move2f(delta * SPEED, 0.);
+        }
+        
+        self.sprite.move_(&change);
+        
+        let mut scroll = Vector2f::new(0., 0.);
+        if (scroll_left && change.x < 0.) || (scroll_right && change.x > 0.) {
+            scroll.x = change.x;
+        }
+        if (scroll_up && change.y < 0.) || (scroll_down && change.y > 0.) {
+            scroll.y = change.y;
+        }
+        
+        if scroll.x != 0. || scroll.y != 0. {
+            Some(scroll)
+        } else {
+            None
+        }
     }
 }
 
