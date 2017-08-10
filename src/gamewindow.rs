@@ -1,6 +1,7 @@
 use sfml::graphics::*;
 use sfml::window::*;
 use sfml::system::{Vector2i, Vector2f, Vector2u};
+use resizehandler::ResizeHandler;
 
 const TITLE: &'static str = "#survive";
 const DEFAULT_SIZE: (u32, u32) = (800, 600);
@@ -57,6 +58,14 @@ impl GameWindow {
             bottom: FloatRect::new(0., size.y - bound, size.x, bound),
             right: FloatRect::new(size.x - bound, 0., bound, size.y),
         }
+    }
+}
+
+impl ResizeHandler for GameWindow {
+    fn on_resize(&mut self, width: u32, height: u32) {
+        let mut view = self.rwin.view().to_owned();
+        view.set_size2f(width as f32, height as f32);
+        self.rwin.set_view(&view);
     }
 }
 

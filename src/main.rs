@@ -33,6 +33,7 @@ fn main() {
                 Event::KeyPressed { code: Key::Escape, .. }
                         => break 'mainl,
                 Event::Closed => break 'mainl,
+                Event::Resized { width, height } => win.on_resize(width, height),
                 _ => {},
             }
         }

@@ -53,18 +53,18 @@ impl<'s> Player<'s> {
         let mut scroll_down = false;
         
         if bounds.left.intersection(&rect).is_some() {
-            println!("scroll left");
+            //println!("scroll left");
             scroll_left = true;
         } else if bounds.right.intersection(&rect).is_some() {
-            println!("scroll right");
+            //println!("scroll right");
             scroll_right = true;
         }
         
         if bounds.top.intersection(&rect).is_some() {
-            println!("scroll up");
+            //println!("scroll up");
             scroll_up = true;
         } else if bounds.bottom.intersection(&rect).is_some() {
-            println!("scroll down");
+            //println!("scroll down");
             scroll_down = true;
         }
         
