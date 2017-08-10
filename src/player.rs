@@ -8,7 +8,7 @@ use gamewindow::GameWindow;
 use gamewindow::ScrollBounds;
 
 const SPEED: f32 = 350.;
-const SCROLL_BOUND: f32 = 25.;
+const SCROLL_BOUND: f32 = 64.;
 
 pub struct Player<'s> {
     sprite: Sprite<'s>,
@@ -55,11 +55,13 @@ impl<'s> Player<'s> {
             //self.sprite.move2f(delta * SPEED, 0.);
         }
         
-        let pixel = target.map_coords_to_pixel_current_view(&self.sprite.position());
+        //let pixel = target.map_coords_to_pixel_current_view(&pos);
         
         let mut rect = self.sprite.global_bounds();
-        rect.left = pixel.x as f32;
-        rect.top = pixel.y as f32;
+        let coords = target.map_coords_to_pixel_current_view(
+                            &Vector2f::new(rect.left, rect.top));
+        rect.left = coords.x as f32;
+        rect.top = coords.y as f32;
         
         //println!("{:?}", rect);
         
@@ -105,6 +107,8 @@ impl<'s> MousePosHandler for Player<'s> {
         let dx = coords.x - cx;
         let dy = coords.y - cy;
         //println!("{} {}", dx, dy);
+        
+        // Set the rotation angle based on distances
         self.sprite.set_rotation(dy.atan2(dx).to_degrees() + 90.);
     }
 }
