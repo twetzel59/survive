@@ -37,22 +37,22 @@ impl<'s> Player<'s> {
     }
     
     fn handle_keys_realtime(&mut self, delta: f32, bounds: &ScrollBounds, target: &RenderTarget) -> Option<Vector2f> {
-        //let rot = self.sprite.rotation().to_radians();
+        let rot = self.sprite.rotation().to_radians();
         
         if Key::W.is_pressed() {
-            //self.sprite.move2f(rot.sin() * SPEED, rot.cos() * -SPEED);
-            self.sprite.move2f(0., delta * -SPEED);
+            self.sprite.move2f(rot.sin() * delta * SPEED, rot.cos() * delta * -SPEED);
+            //self.sprite.move2f(0., delta * -SPEED);
         } else if Key::S.is_pressed() {
-            //self.sprite.move2f(rot.sin() * -SPEED, rot.cos() * SPEED);
-            self.sprite.move2f(0., delta * SPEED);
+            self.sprite.move2f(rot.sin() * delta * -SPEED, rot.cos() * delta * SPEED);
+            //self.sprite.move2f(0., delta * SPEED);
         }
         
         if Key::A.is_pressed() {
-            //self.sprite.move2f(rot.cos() * -SPEED, rot.sin() * -SPEED);
-            self.sprite.move2f(delta * -SPEED, 0.);
+            self.sprite.move2f(rot.cos() * delta * -SPEED, rot.sin() * delta * -SPEED);
+            //self.sprite.move2f(delta * -SPEED, 0.);
         } else if Key::D.is_pressed() {
-            //self.sprite.move2f(rot.cos() * SPEED, rot.sin() * SPEED);
-            self.sprite.move2f(delta * SPEED, 0.);
+            self.sprite.move2f(rot.cos() * delta * SPEED, rot.sin() * delta * SPEED);
+            //self.sprite.move2f(delta * SPEED, 0.);
         }
         
         let pixel = target.map_coords_to_pixel_current_view(&self.sprite.position());
