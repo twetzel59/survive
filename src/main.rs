@@ -13,18 +13,18 @@ fn main() {
     
     let res = Resources::new();
     
-    let mut player = Player::new(&res);
+    let tilemgr = TileManager::new(&res);
     
-    let tex = Texture::from_file("test.png").unwrap();
-    let mut test = Sprite::with_texture(&tex);
-    test.set_scale2f(100., 100.);
+    let mut player = Player::new(&res);
     
     let mut clock = Clock::start();
     'mainl: loop {
         let delta = clock.restart().as_seconds();
         
         win.rwin.clear(&Color::black());
-        win.rwin.draw(&test);
+        for i in &tilemgr {
+            win.rwin.draw(i);
+        }
         win.rwin.draw(&player);
         win.rwin.display();
         
