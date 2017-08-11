@@ -3,7 +3,9 @@ use sfml::graphics::*;
 use sfml::system::Vector2f;
 use resources::Resources;
 
-const TILE_SCALE: f32 = 128.;
+pub const TILES_ROW: i32 = 8;
+const TILES_ROW_HALF: i32 = TILES_ROW / 2;
+const TILE_SCALE: f32 = 4.;
 
 pub struct Tile<'s> {
     sprite: Sprite<'s>
@@ -25,16 +27,17 @@ pub struct TileManager<'s> {
 }
 
 impl<'s> TileManager<'s> {
-    pub fn new(res: &'s Resources) -> TileManager {
+    pub fn new(tex: &'s [Texture]) -> TileManager {
         let mut tiles = Vec::new();
         
-        let size = res.img.nyan.size();
+        let size = tex[0].size();
         let size = Vector2f::new(size.x as f32, size.y as f32);
         let origin = Vector2f::new(size.x / 2., size.y / 2.);
         
-        for x in -4..4 {
-            for y in -4..4 {
-                let mut sprite = Sprite::with_texture(&res.img.nyan);
+        for x in -TILES_ROW_HALF..TILES_ROW_HALF {
+            for y in -TILES_ROW_HALF..TILES_ROW_HALF {
+                println!("index: {}", ((y + TILES_ROW_HALF) * TILES_ROW + x + TILES_ROW_HALF) as usize);
+                let mut sprite = Sprite::with_texture(&tex[((y + TILES_ROW_HALF) * TILES_ROW + x + TILES_ROW_HALF) as usize]);
                 sprite.set_origin(&origin);
                 sprite.set_scale2f(TILE_SCALE, TILE_SCALE);
                 sprite.set_position2f(TILE_SCALE * size.x * x as f32,
@@ -44,9 +47,9 @@ impl<'s> TileManager<'s> {
                 let cr = ((x + 5) as u8) * 25;
                 let cg = ((y + 5) as u8) * 25;
                 sprite.set_color(&Color::rgb(cr, cg, 255));
+                */
                 
                 tiles.push(Tile { sprite });
-                */
             }
         }
         

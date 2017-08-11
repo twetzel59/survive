@@ -1,4 +1,5 @@
 extern crate core;
+extern crate noise;
 extern crate sfml;
 
 pub use gamewindow::GameWindow;
@@ -14,6 +15,7 @@ pub use worldgen::WorldGen;
 pub mod gamewindow;
 pub mod mousehandler;
 pub mod player;
+pub mod registry;
 pub mod resizehandler;
 pub mod resources;
 pub mod tiles;
