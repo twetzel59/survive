@@ -32,15 +32,21 @@ impl<'s> TileManager<'s> {
         let size = Vector2f::new(size.x as f32, size.y as f32);
         let origin = Vector2f::new(size.x / 2., size.y / 2.);
         
-        for x in -5..6 {
-            for y in -5..6 {
+        for x in -4..4 {
+            for y in -4..4 {
                 let mut sprite = Sprite::with_texture(&res.img.nyan);
                 sprite.set_origin(&origin);
                 sprite.set_scale2f(TILE_SCALE, TILE_SCALE);
                 sprite.set_position2f(TILE_SCALE * size.x * x as f32,
                                       TILE_SCALE * size.y * y as f32);
+
+                /*
+                let cr = ((x + 5) as u8) * 25;
+                let cg = ((y + 5) as u8) * 25;
+                sprite.set_color(&Color::rgb(cr, cg, 255));
                 
                 tiles.push(Tile { sprite });
+                */
             }
         }
         

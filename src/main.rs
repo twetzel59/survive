@@ -13,6 +13,11 @@ fn main() {
     
     let res = Resources::new();
     
+    let wg = WorldGen::new();
+    let tex = wg.generate();
+    let mut test = Sprite::with_texture(&tex);
+    test.set_scale2f(0.2, 0.2);
+    
     let tilemgr = TileManager::new(&res);
     
     let mut player = Player::new(&res);
@@ -22,9 +27,12 @@ fn main() {
         let delta = clock.restart().as_seconds();
         
         win.rwin.clear(&Color::black());
+        /*
         for i in &tilemgr {
             win.rwin.draw(i);
         }
+        */
+        win.rwin.draw(&test);
         win.rwin.draw(&player);
         win.rwin.display();
         
