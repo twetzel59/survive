@@ -137,9 +137,15 @@ impl<'s> Player<'s> {
         */
         
         let pos = self.sprite.position();        
-        let pos = Vector2i::new((pos.x / TILE_SCALE) as i32,
-                                (pos.y / TILE_SCALE) as i32);
-        println!("{:?}", pos);
+        let pos = Vector2i::new(((pos.x / TILE_SCALE) + (WORLD_SIZE as f32 / 2.)) as i32,
+                                ((pos.y / TILE_SCALE) + (WORLD_SIZE as f32 / 2.)) as i32);
+        //println!("{:?}", pos);
+        
+        if pos.x < 0 || pos.y < 0 || pos.x > WORLD_SIZE as i32 || pos.y > WORLD_SIZE as i32 {
+            return;
+        }
+        
+        println!("{:?}: {:?}", pos, world[(pos.x as usize) * WORLD_SIZE as usize + pos.y as usize]);
     }
 }
 

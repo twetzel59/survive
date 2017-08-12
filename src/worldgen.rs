@@ -3,7 +3,7 @@ use sfml::graphics::*;
 use registry::terrain::Terrain;
 use tiles::TILES_ROW;
 
-pub const WORLD_SIZE: u32 = 64;
+pub const WORLD_SIZE: u32 = 1024;
 const TILE_SIZE: i32 = WORLD_SIZE as i32 / TILES_ROW as i32;
 const NOISE_INPUT_DIVISOR: f32 = 512.;
 

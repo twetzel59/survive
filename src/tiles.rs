@@ -32,10 +32,11 @@ impl<'s> TileManager<'s> {
         
         let size = tex[0].size();
         let size = Vector2f::new(size.x as f32, size.y as f32);
-        let origin = Vector2f::new(size.x / 2., size.y / 2.);
+        //let origin = Vector2f::new(size.x / 2., size.y / 2.);
         
         for x in -TILES_ROW_HALF..TILES_ROW_HALF {
             for y in -TILES_ROW_HALF..TILES_ROW_HALF {
+                /*
                 println!("index: {}", ((x + TILES_ROW_HALF) * TILES_ROW + y + TILES_ROW_HALF) as usize);
                 let mut sprite = Sprite::with_texture(&tex[((x + TILES_ROW_HALF) * TILES_ROW + y + TILES_ROW_HALF) as usize]);
                 sprite.set_origin(&origin);
@@ -43,12 +44,19 @@ impl<'s> TileManager<'s> {
                 sprite.set_position2f(TILE_SCALE * size.x * (x + 1) as f32 / 2.,
                                       TILE_SCALE * size.y * (y + 1) as f32 / 2.);
                 println!("pos: {:?}", sprite.position());
+                */
 
                 /*
                 let cr = ((x + 5) as u8) * 25;
                 let cg = ((y + 5) as u8) * 25;
                 sprite.set_color(&Color::rgb(cr, cg, 255));
                 */
+                
+                println!("index: {}", ((x + TILES_ROW_HALF) * TILES_ROW + y + TILES_ROW_HALF) as usize);
+                let mut sprite = Sprite::with_texture(&tex[((x + TILES_ROW_HALF) * TILES_ROW + y + TILES_ROW_HALF) as usize]);
+                sprite.set_scale2f(TILE_SCALE, TILE_SCALE);
+                sprite.set_position2f(TILE_SCALE * size.x * x as f32,
+                                      TILE_SCALE * size.y * y as f32);
                 
                 tiles.push(Tile { sprite });
             }

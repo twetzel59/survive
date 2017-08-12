@@ -5,7 +5,7 @@ pub mod colors {
     pub const WATER: Color = Color { r:  32, g:  64, b: 128, a: 255 };
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum Terrain {
     Grass,
     Water,
