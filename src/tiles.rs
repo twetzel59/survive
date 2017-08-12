@@ -3,9 +3,9 @@ use sfml::graphics::*;
 use sfml::system::Vector2f;
 use resources::Resources;
 
+pub const TILE_SCALE: f32 = 4.;
 pub const TILES_ROW: i32 = 4;
 const TILES_ROW_HALF: i32 = TILES_ROW / 2;
-const TILE_SCALE: f32 = 4.;
 
 pub struct Tile<'s> {
     sprite: Sprite<'s>
@@ -40,8 +40,9 @@ impl<'s> TileManager<'s> {
                 let mut sprite = Sprite::with_texture(&tex[((x + TILES_ROW_HALF) * TILES_ROW + y + TILES_ROW_HALF) as usize]);
                 sprite.set_origin(&origin);
                 sprite.set_scale2f(TILE_SCALE, TILE_SCALE);
-                sprite.set_position2f(TILE_SCALE * size.x * x as f32,
-                                      TILE_SCALE * size.y * y as f32);
+                sprite.set_position2f(TILE_SCALE * size.x * (x + 1) as f32 / 2.,
+                                      TILE_SCALE * size.y * (y + 1) as f32 / 2.);
+                println!("pos: {:?}", sprite.position());
 
                 /*
                 let cr = ((x + 5) as u8) * 25;

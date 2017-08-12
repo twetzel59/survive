@@ -1,7 +1,8 @@
 use sfml::graphics::*;
-use sfml::system::{Vector2i, Vector2f};
+use sfml::system::{Vector2i, Vector2f, Vector2u};
 use sfml::window::Key;
 use mousehandler::MousePosHandler;
+use registry::terrain::Terrain;
 use resources::Resources;
 //use gamewindow::ScrollDir;
 use gamewindow::GameWindow;
@@ -32,8 +33,14 @@ impl<'s> Player<'s> {
     }
     */
     
-    pub fn update(&mut self, delta: f32, win: &GameWindow) -> Option<Vector2f> {
-        self.handle_keys_realtime(delta, &win.scroll_bounds(SCROLL_BOUND), &win.rwin)
+    pub fn update(&mut self, delta: f32, win: &GameWindow, world: &[Terrain]) -> Option<Vector2f> {
+        let res = self.handle_keys_realtime(delta,
+                                            &win.scroll_bounds(SCROLL_BOUND),
+                                            &win.rwin);
+        
+        self.test(world);
+        
+        res
     }
     
     fn handle_keys_realtime(&mut self, delta: f32, bounds: &ScrollBounds, target: &RenderTarget) -> Option<Vector2f> {
@@ -116,6 +123,23 @@ impl<'s> Player<'s> {
         } else {
             None
         }
+    }
+    
+    fn test(&self, world: &[Terrain]) {
+        use tiles::TILE_SCALE;
+        use worldgen::WORLD_SIZE;
+        
+        /*
+        for x in 0..WORLD_SIZE {
+            for y in 0..WORLD_SIZE {
+            }
+        }
+        */
+        
+        let pos = self.sprite.position();        
+        let pos = Vector2i::new((pos.x / TILE_SCALE) as i32,
+                                (pos.y / TILE_SCALE) as i32);
+        println!("{:?}", pos);
     }
 }
 

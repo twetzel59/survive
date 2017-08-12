@@ -1,15 +1,16 @@
 use noise::{NoiseModule, Perlin, Seedable};
 use sfml::graphics::*;
+use registry::terrain::Terrain;
 use tiles::TILES_ROW;
 
-const NOISE_INPUT_DIVISOR: f32 = 512.;
-const WORLD_SIZE: u32 = 1024;
-//const TILES: i32 = TILES_ROW * TILES_ROW;
+pub const WORLD_SIZE: u32 = 64;
 const TILE_SIZE: i32 = WORLD_SIZE as i32 / TILES_ROW as i32;
+const NOISE_INPUT_DIVISOR: f32 = 512.;
 
 pub struct WorldGen {
     perlin: Perlin,
     textures: Vec<Texture>,
+    world: Vec<Terrain>,
 }
 
 impl WorldGen {
@@ -20,6 +21,7 @@ impl WorldGen {
         let mut wg = WorldGen {
             perlin,
             textures: Vec::new(),
+            world: Vec::new(),
         };
         
         wg.generate();
@@ -29,6 +31,10 @@ impl WorldGen {
     
     pub fn textures(&self) -> &[Texture] {
         &self.textures
+    }
+    
+    pub fn world(&self) -> &[Terrain] {
+        &self.world
     }
     
     fn generate(&mut self) {
@@ -44,15 +50,16 @@ impl WorldGen {
                 let fx = x as f32;
                 let fy = y as f32;
                 
-                let color = if self.perlin.get(
-                                [fx / NOISE_INPUT_DIVISOR,
-                                fy / NOISE_INPUT_DIVISOR]) > 0.45 {
-                    WATER
+                let (terrain, color) = if self.perlin.get(
+                                        [fx / NOISE_INPUT_DIVISOR,
+                                        fy / NOISE_INPUT_DIVISOR]) > 0.45 {
+                    (Terrain::Water, colors::WATER)
                 } else {
-                    GRASS
+                    (Terrain::Grass, colors::GRASS)
                 };
                 
                 image.set_pixel(x, y, &color);
+                self.world.push(terrain);
             }
         }
         

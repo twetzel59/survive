@@ -45,7 +45,7 @@ fn main() {
         let Vector2i { x: mx, y: my } = win.rwin.mouse_position();
         player.mouse_pos(&win.rwin, mx, my);
         
-        match player.update(delta, &win) {
+        match player.update(delta, &win, &wg.world()) {
             Some(s) => win.scroll(&s),
             None => {},
         };
