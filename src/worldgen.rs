@@ -4,8 +4,8 @@ use tiles::TILES_ROW;
 
 const NOISE_INPUT_DIVISOR: f32 = 512.;
 const WORLD_SIZE: u32 = 1024;
-const TILES: i32 = TILES_ROW * TILES_ROW;
-const TILE_SIZE: i32 = WORLD_SIZE as i32 / TILES as i32;
+//const TILES: i32 = TILES_ROW * TILES_ROW;
+const TILE_SIZE: i32 = WORLD_SIZE as i32 / TILES_ROW as i32;
 
 pub struct WorldGen {
     perlin: Perlin,
@@ -62,23 +62,16 @@ impl WorldGen {
     }
     
     fn split_into_textures(&mut self, image: &Image) {
-        for x in 0..TILES {
-            for y in 0..TILES {
-                let left = if x == 0 {
-                    0
-                } else {
-                    WORLD_SIZE as i32 / TILES * x
-                };
-                
-                let top = if y == 0 {
-                    0
-                } else {
-                    WORLD_SIZE as i32 / TILES * y
-                };
-                
-                println!("{} {}", left, top);
-                
-                self.textures.push(Texture::from_image_with_rect(image, &IntRect::new(left, top, TILE_SIZE, TILE_SIZE)).unwrap());
+        for x in 0..TILES_ROW {
+            for y in 0..TILES_ROW {
+                let tex = Texture::from_image_with_rect(
+                                   image, &IntRect::new(x * TILE_SIZE,
+                                                        y * TILE_SIZE,
+                                                        TILE_SIZE,
+                                                        TILE_SIZE))
+                                   .unwrap();
+
+                self.textures.push(tex);
             }
         }
     }

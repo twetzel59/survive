@@ -3,7 +3,7 @@ use sfml::graphics::*;
 use sfml::system::Vector2f;
 use resources::Resources;
 
-pub const TILES_ROW: i32 = 8;
+pub const TILES_ROW: i32 = 4;
 const TILES_ROW_HALF: i32 = TILES_ROW / 2;
 const TILE_SCALE: f32 = 4.;
 
@@ -36,8 +36,8 @@ impl<'s> TileManager<'s> {
         
         for x in -TILES_ROW_HALF..TILES_ROW_HALF {
             for y in -TILES_ROW_HALF..TILES_ROW_HALF {
-                println!("index: {}", ((y + TILES_ROW_HALF) * TILES_ROW + x + TILES_ROW_HALF) as usize);
-                let mut sprite = Sprite::with_texture(&tex[((y + TILES_ROW_HALF) * TILES_ROW + x + TILES_ROW_HALF) as usize]);
+                println!("index: {}", ((x + TILES_ROW_HALF) * TILES_ROW + y + TILES_ROW_HALF) as usize);
+                let mut sprite = Sprite::with_texture(&tex[((x + TILES_ROW_HALF) * TILES_ROW + y + TILES_ROW_HALF) as usize]);
                 sprite.set_origin(&origin);
                 sprite.set_scale2f(TILE_SCALE, TILE_SCALE);
                 sprite.set_position2f(TILE_SCALE * size.x * x as f32,
