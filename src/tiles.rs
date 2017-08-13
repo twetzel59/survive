@@ -1,7 +1,6 @@
 use core::slice;
 use sfml::graphics::*;
 use sfml::system::Vector2f;
-use resources::Resources;
 
 pub const TILE_SCALE: f32 = 4.;
 pub const TILES_ROW: i32 = 4;

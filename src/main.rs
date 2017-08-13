@@ -13,12 +13,14 @@ fn main() {
     
     let res = Resources::new();
     
-    let mut wg = WorldGen::new();
+    let wg = WorldGen::new();
     //let test = Sprite::with_texture(&wg.textures[9]);
     
     let tilemgr = TileManager::new(wg.textures());
     
     let mut player = Player::new(&res);
+    
+    let mut stat = stats::Stats::new();
     
     let mut clock = Clock::start();
     'mainl: loop {
@@ -45,9 +47,16 @@ fn main() {
         let Vector2i { x: mx, y: my } = win.rwin.mouse_position();
         player.mouse_pos(&win.rwin, mx, my);
         
-        match player.update(delta, &win, &wg.world()) {
+        match player.update(delta, &win) {
             Some(s) => win.scroll(&s),
             None => {},
         };
+        
+        if player.is_in_water(&wg.world()) {
+            stat.event(delta, &stats::StatEvent::InWater);
+        }
+        stat.update(delta);
+        
+        println!("{:?}", stat);
     }
 }

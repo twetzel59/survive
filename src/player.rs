@@ -1,5 +1,5 @@
 use sfml::graphics::*;
-use sfml::system::{Vector2i, Vector2f, Vector2u};
+use sfml::system::{Vector2i, Vector2f};
 use sfml::window::Key;
 use mousehandler::MousePosHandler;
 use registry::terrain::Terrain;
@@ -33,14 +33,40 @@ impl<'s> Player<'s> {
     }
     */
     
-    pub fn update(&mut self, delta: f32, win: &GameWindow, world: &[Terrain]) -> Option<Vector2f> {
+    pub fn update(&mut self, delta: f32, win: &GameWindow) -> Option<Vector2f> {
         let res = self.handle_keys_realtime(delta,
                                             &win.scroll_bounds(SCROLL_BOUND),
                                             &win.rwin);
         
-        self.test(world);
-        
         res
+    }
+    
+    pub fn is_in_water(&self, world: &[Terrain]) -> bool {
+        use tiles::TILE_SCALE;
+        use worldgen::WORLD_SIZE;
+        
+        /*
+        for x in 0..WORLD_SIZE {
+            for y in 0..WORLD_SIZE {
+            }
+        }
+        */
+        
+        let pos = self.sprite.position();        
+        let pos = Vector2i::new(((pos.x / TILE_SCALE) + (WORLD_SIZE as f32 / 2.)) as i32,
+                                ((pos.y / TILE_SCALE) + (WORLD_SIZE as f32 / 2.)) as i32);
+        //println!("{:?}", pos);
+        
+        if pos.x < 0 || pos.y < 0 || pos.x > WORLD_SIZE as i32 || pos.y > WORLD_SIZE as i32 {
+            return false;
+        }
+        
+        //println!("{:?}: {:?}", pos, world[(pos.x as usize) * WORLD_SIZE as usize + pos.y as usize]);
+        
+        match world[(pos.x as usize) * WORLD_SIZE as usize + pos.y as usize] {
+            Terrain::Water => true,
+            _ => false,
+        }
     }
     
     fn handle_keys_realtime(&mut self, delta: f32, bounds: &ScrollBounds, target: &RenderTarget) -> Option<Vector2f> {
@@ -123,29 +149,6 @@ impl<'s> Player<'s> {
         } else {
             None
         }
-    }
-    
-    fn test(&self, world: &[Terrain]) {
-        use tiles::TILE_SCALE;
-        use worldgen::WORLD_SIZE;
-        
-        /*
-        for x in 0..WORLD_SIZE {
-            for y in 0..WORLD_SIZE {
-            }
-        }
-        */
-        
-        let pos = self.sprite.position();        
-        let pos = Vector2i::new(((pos.x / TILE_SCALE) + (WORLD_SIZE as f32 / 2.)) as i32,
-                                ((pos.y / TILE_SCALE) + (WORLD_SIZE as f32 / 2.)) as i32);
-        //println!("{:?}", pos);
-        
-        if pos.x < 0 || pos.y < 0 || pos.x > WORLD_SIZE as i32 || pos.y > WORLD_SIZE as i32 {
-            return;
-        }
-        
-        println!("{:?}: {:?}", pos, world[(pos.x as usize) * WORLD_SIZE as usize + pos.y as usize]);
     }
 }
 
