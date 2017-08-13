@@ -18,5 +18,6 @@ pub mod player;
 pub mod registry;
 pub mod resizehandler;
 pub mod resources;
+pub mod stats;
 pub mod tiles;
 pub mod worldgen;
