@@ -50,13 +50,37 @@ impl WorldGen {
                 let fx = x as f32;
                 let fy = y as f32;
                 
-                let (terrain, color) = if self.perlin.get(
-                                        [fx / NOISE_INPUT_DIVISOR,
-                                        fy / NOISE_INPUT_DIVISOR]) > 0.45 {
+                let value = self.perlin.get([fx / NOISE_INPUT_DIVISOR,
+                                            fy / NOISE_INPUT_DIVISOR]);
+                
+                let (mut terrain, mut color) = if value > 0.45 {
                     (Terrain::Water, colors::WATER)
                 } else {
                     (Terrain::Grass, colors::GRASS)
                 };
+                
+                if value < 0.45 && value > 0.35 {
+                    terrain = Terrain::Sand;
+                    color = colors::SAND;
+                }
+                
+                match terrain {
+                    Terrain::Water => {
+                        if x % 16 == 0 && y % 16 == 0 && self.perlin.get([fx / 7., fy / 7.]) > 0.6 {
+                            color.r = (colors::WATER_SPARKLE.r as f32 * value) as u8;
+                            color.g = (colors::WATER_SPARKLE.g as f32 * value) as u8;
+                            color.b = (colors::WATER_SPARKLE.b as f32 * value) as u8;
+                        } else if value > 0.57 {
+                            color = colors::WATER_DEEP;
+                        }
+                    },
+                    Terrain::Sand => {
+                        if x % 8 == 0 && y % 8 == 0 && self.perlin.get([fx / 14., fy / 14.]) > 0.4 {
+                            color = colors::SAND_SPARKLE;
+                        }
+                    },
+                    _ => {},
+                }
                 
                 image.set_pixel(x, y, &color);
                 self.world.push(terrain);

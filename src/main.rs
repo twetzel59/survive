@@ -22,6 +22,8 @@ fn main() {
     
     let mut stat = stats::Stats::new();
     
+    let mut ui = UiManager::new(&res);
+    
     let mut clock = Clock::start();
     'mainl: loop {
         let delta = clock.restart().as_seconds();
@@ -32,6 +34,7 @@ fn main() {
         }
         //win.rwin.draw(&test);
         win.rwin.draw(&player);
+        ui.draw_all(&mut win.rwin);
         win.rwin.display();
         
         while let Some(e) = win.rwin.poll_event() {
@@ -39,7 +42,10 @@ fn main() {
                 Event::KeyPressed { code: Key::Escape, .. }
                         => break 'mainl,
                 Event::Closed => break 'mainl,
-                Event::Resized { width, height } => win.on_resize(width, height),
+                Event::Resized { width, height } => {
+                    win.on_resize(width, height);
+                    ui.on_resize(width, height);
+                },
                 _ => {},
             }
         }

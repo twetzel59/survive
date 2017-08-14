@@ -10,6 +10,7 @@ pub use resizehandler::ResizeHandler;
 pub use resources::Resources;
 pub use tiles::Tile;
 pub use tiles::TileManager;
+pub use ui::ui_manager::UiManager;
 pub use worldgen::WorldGen;
 
 pub mod gamewindow;
@@ -20,4 +21,5 @@ pub mod resizehandler;
 pub mod resources;
 pub mod stats;
 pub mod tiles;
+pub mod ui;
 pub mod worldgen;

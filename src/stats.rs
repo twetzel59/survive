@@ -17,7 +17,7 @@ impl Stats {
     pub fn event(&mut self, delta: f32, event: &StatEvent) {
         self.hydration.handle(delta, event);
     }
-} 
+}
 
 pub enum StatEvent {
     InWater,

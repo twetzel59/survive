@@ -63,9 +63,14 @@ impl<'s> Player<'s> {
         
         //println!("{:?}: {:?}", pos, world[(pos.x as usize) * WORLD_SIZE as usize + pos.y as usize]);
         
-        match world[(pos.x as usize) * WORLD_SIZE as usize + pos.y as usize] {
-            Terrain::Water => true,
-            _ => false,
+        let index = (pos.x as usize) * WORLD_SIZE as usize + pos.y as usize;
+        if index < world.len() {
+            match world[index] {
+                Terrain::Water => true,
+                _ => false,
+            }
+        } else {
+            false
         }
     }
     
