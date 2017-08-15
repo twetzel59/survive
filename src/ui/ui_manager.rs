@@ -1,8 +1,10 @@
 use sfml::graphics::*;
+use sfml::system::Vector2f;
 use super::Element;
 use super::meter::Meter;
 use resizehandler::ResizeHandler;
 use resources::Resources;
+use stats::Stats;
 
 pub struct UiManager<'s> {
     hydration: Meter<'s>,
@@ -11,8 +13,12 @@ pub struct UiManager<'s> {
 impl<'s> UiManager<'s> {
     pub fn new(res: &'s Resources) -> UiManager<'s> {
         UiManager {
-            hydration: Meter::new(res),
+            hydration: Meter::new(res, &Vector2f::new(0.05, 0.02)),
         }
+    }
+    
+    pub fn update(&mut self, current_stats: &Stats) {
+        self.hydration.set_value(current_stats.hydration_level());
     }
     
     pub fn draw_all<T: RenderTarget>(&self, target: &mut T) {

@@ -28,7 +28,7 @@ fn main() {
     'mainl: loop {
         let delta = clock.restart().as_seconds();
         
-        win.rwin.clear(&Color::black());
+        win.rwin.clear(&Color::rgb(180, 215, 255));
         for i in &tilemgr {
             win.rwin.draw(i);
         }
@@ -62,6 +62,8 @@ fn main() {
             stat.event(delta, &stats::StatEvent::InWater);
         }
         stat.update(delta);
+        
+        ui.update(&stat);
         
         println!("{:?}", stat);
     }

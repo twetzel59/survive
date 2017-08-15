@@ -17,6 +17,10 @@ impl Stats {
     pub fn event(&mut self, delta: f32, event: &StatEvent) {
         self.hydration.handle(delta, event);
     }
+    
+    pub fn hydration_level(&self) -> f32 {
+        self.hydration.level()
+    }
 }
 
 pub enum StatEvent {
@@ -33,8 +37,9 @@ struct Hydration {
     level: f32,
 }
 
-const HYDRATION_MAX: f32 = 100.;
-const HYDRATION_INC: f32 = 10.;
+const HYDRATION_MAX: f32 = 1.;
+const HYDRATION_INC: f32 = 1.0;
+const HYDRATION_DEC: f32 = 0.1;
 
 impl Hydration {
     fn new() -> Hydration {
@@ -42,15 +47,18 @@ impl Hydration {
             level: HYDRATION_MAX,
         }
     }
+    
+    fn level(&self) -> f32 {
+        self.level
+    }
 }
 
 impl StatComp for Hydration {
     fn update(&mut self, delta: f32) {
-        self.level -= delta;
+        self.level -= delta * HYDRATION_DEC;
         
-        if self.level > HYDRATION_MAX {
-            self.level = HYDRATION_MAX;
-        }
+        self.level = self.level.min(HYDRATION_MAX);
+        self.level = self.level.max(0.);
     }
     
     fn handle(&mut self, delta: f32, event: &StatEvent) {
