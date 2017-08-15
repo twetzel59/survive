@@ -4,5 +4,6 @@ version = "0.1.0"
 authors = ["twetzel59 <twetzel59@gmail.com>"]
 
 [dependencies]
-sfml = "0.12.0"
 noise = "0.4.1"
+rand = "0.3.16"
+sfml = "0.12.0"

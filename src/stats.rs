@@ -38,8 +38,8 @@ struct Hydration {
 }
 
 const HYDRATION_MAX: f32 = 1.;
-const HYDRATION_INC: f32 = 1.0;
-const HYDRATION_DEC: f32 = 0.1;
+const HYDRATION_INC: f32 = 0.2;
+const HYDRATION_DEC: f32 = 0.04;
 
 impl Hydration {
     fn new() -> Hydration {

@@ -1,5 +1,6 @@
 extern crate core;
 extern crate noise;
+extern crate rand;
 extern crate sfml;
 
 pub use gamewindow::GameWindow;

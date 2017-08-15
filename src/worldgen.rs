@@ -1,4 +1,5 @@
 use noise::{NoiseModule, Perlin, Seedable};
+use rand::{Rng, SeedableRng, XorShiftRng};
 use sfml::graphics::*;
 use registry::terrain::Terrain;
 use tiles::TILES_ROW;
@@ -9,6 +10,7 @@ const NOISE_INPUT_DIVISOR: f32 = 256.;
 
 pub struct WorldGen {
     perlin: Perlin,
+    rng: XorShiftRng,
     textures: Vec<Texture>,
     world: Vec<Terrain>,
 }
@@ -20,6 +22,7 @@ impl WorldGen {
         
         let mut wg = WorldGen {
             perlin,
+            rng: SeedableRng::from_seed([1, 2, 3, 4]),
             textures: Vec::new(),
             world: Vec::new(),
         };
