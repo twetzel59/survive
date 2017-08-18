@@ -3,6 +3,7 @@ extern crate noise;
 extern crate rand;
 extern crate sfml;
 
+pub use entities::entity_manager::EntityManager;
 pub use gamewindow::GameWindow;
 pub use gamewindow::ScrollBounds;
 pub use mousehandler::MousePosHandler;
@@ -14,6 +15,7 @@ pub use tiles::TileManager;
 pub use ui::ui_manager::UiManager;
 pub use worldgen::WorldGen;
 
+pub mod entities;
 pub mod gamewindow;
 pub mod mousehandler;
 pub mod player;

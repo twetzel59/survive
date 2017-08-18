@@ -13,6 +13,9 @@ fn main() {
     
     let res = Resources::new();
     
+    let mut entitymgr = EntityManager::new();
+    entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
+    
     let wg = WorldGen::new();
     //let test = Sprite::with_texture(&wg.textures[9]);
     
@@ -34,6 +37,7 @@ fn main() {
         }
         //win.rwin.draw(&test);
         win.rwin.draw(&player);
+        entitymgr.draw_all(&mut win.rwin);
         ui.draw_all(&mut win.rwin);
         win.rwin.display();
         
