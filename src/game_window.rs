@@ -1,7 +1,7 @@
 use sfml::graphics::*;
 use sfml::window::*;
 use sfml::system::{Vector2i, Vector2f, Vector2u};
-use resizehandler::ResizeHandler;
+use resize_handler::ResizeHandler;
 
 const TITLE: &'static str = "#survive";
 const DEFAULT_SIZE: (u32, u32) = (800, 600);

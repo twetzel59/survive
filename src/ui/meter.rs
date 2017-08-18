@@ -1,8 +1,8 @@
 use sfml::graphics::*;
 use sfml::system::{Vector2f, Vector2u};
-use resizehandler::ResizeHandler;
+use resize_handler::ResizeHandler;
 use resources::Resources;
-use super::Element;
+use super::element::Element;
 
 const PADDING: f32 = 10.;
 const BORDER: f32 = 1.;

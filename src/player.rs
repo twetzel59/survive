@@ -1,12 +1,11 @@
 use sfml::graphics::*;
 use sfml::system::{Vector2i, Vector2f};
 use sfml::window::Key;
-use mousehandler::MousePosHandler;
+use mouse_handler::MousePosHandler;
 use registry::terrain::Terrain;
 use resources::Resources;
 //use gamewindow::ScrollDir;
-use gamewindow::GameWindow;
-use gamewindow::ScrollBounds;
+use game_window::{GameWindow, ScrollBounds};
 
 const SPEED: f32 = 350.;
 const SCROLL_BOUND: f32 = 64.;

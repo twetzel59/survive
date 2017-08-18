@@ -1,8 +1,8 @@
 use sfml::graphics::*;
 use sfml::system::Vector2f;
-use super::Element;
+use super::element::Element;
 use super::meter::Meter;
-use resizehandler::ResizeHandler;
+use resize_handler::ResizeHandler;
 use resources::Resources;
 use stats::Stats;
 

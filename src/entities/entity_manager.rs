@@ -1,6 +1,5 @@
-use sfml::graphics::{RenderTarget, Sprite};
+use sfml::graphics::RenderTarget;
 use super::entity::*;
-use resources::Resources;
 
 pub struct EntityManager<'a, 's> {
     entities: Vec<Box<Entity<'s> + 'a>>,

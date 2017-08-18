@@ -16,7 +16,7 @@ fn main() {
     let mut entitymgr = EntityManager::new();
     entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
     
-    let wg = WorldGen::new();
+    let wg = Worldgen::new();
     //let test = Sprite::with_texture(&wg.textures[9]);
     
     let tilemgr = TileManager::new(wg.textures());

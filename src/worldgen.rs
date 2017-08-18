@@ -8,19 +8,19 @@ pub const WORLD_SIZE: u32 = 512;
 const TILE_SIZE: i32 = WORLD_SIZE as i32 / TILES_ROW as i32;
 const NOISE_INPUT_DIVISOR: f32 = 256.;
 
-pub struct WorldGen {
+pub struct Worldgen {
     perlin: Perlin,
     rng: XorShiftRng,
     textures: Vec<Texture>,
     world: Vec<Terrain>,
 }
 
-impl WorldGen {
-    pub fn new() -> WorldGen {
+impl Worldgen {
+    pub fn new() -> Worldgen {
         let mut perlin = Perlin::new();
         perlin = perlin.set_seed(1);
         
-        let mut wg = WorldGen {
+        let mut wg = Worldgen {
             perlin,
             rng: SeedableRng::from_seed([1, 2, 3, 4]),
             textures: Vec::new(),
