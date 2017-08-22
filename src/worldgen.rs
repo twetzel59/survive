@@ -1,16 +1,20 @@
 use noise::{NoiseModule, Perlin, Seedable};
-use rand::{Rng, SeedableRng, XorShiftRng};
+//use rand::{Rng, SeedableRng, XorShiftRng};
 use sfml::graphics::*;
 use registry::terrain::Terrain;
 use tiles::TILES_ROW;
 
 pub const WORLD_SIZE: u32 = 512;
+//pub const WORLD_SIZE_HALF: u32 = WORLD_SIZE / 2;
+//pub const PLANT_SECTORS: u32 = 64;
+//pub const PLANT_SKIP: u32 = WORLD_SIZE / 8;
+//pub const PLANT_SKIP_HALF: u32 = PLANT_SKIP / 2;
 const TILE_SIZE: i32 = WORLD_SIZE as i32 / TILES_ROW as i32;
 const NOISE_INPUT_DIVISOR: f32 = 256.;
 
 pub struct Worldgen {
     perlin: Perlin,
-    rng: XorShiftRng,
+    //rng: XorShiftRng,
     textures: Vec<Texture>,
     world: Vec<Terrain>,
 }
@@ -22,7 +26,7 @@ impl Worldgen {
         
         let mut wg = Worldgen {
             perlin,
-            rng: SeedableRng::from_seed([1, 2, 3, 4]),
+            //rng: SeedableRng::from_seed([1, 2, 3, 4]),
             textures: Vec::new(),
             world: Vec::new(),
         };

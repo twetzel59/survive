@@ -14,7 +14,9 @@ fn main() {
     let res = Resources::new();
     
     let mut entitymgr = EntityManager::new();
-    entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
+    //entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
+    //entitymgr.add(Box::new(entities::deciduous_tree::DeciduousTree::new(&res)));
+    plants::generate_plants(&res, &mut entitymgr);
     
     let wg = Worldgen::new();
     //let test = Sprite::with_texture(&wg.textures[9]);
@@ -69,6 +71,6 @@ fn main() {
         
         ui.update(&stat);
         
-        println!("{:?}", stat);
+        //println!("{:?}", stat);
     }
 }

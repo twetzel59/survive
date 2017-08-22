@@ -18,6 +18,7 @@ pub use worldgen::Worldgen;
 pub mod entities;
 pub mod game_window;
 pub mod mouse_handler;
+pub mod plants;
 pub mod player;
 pub mod registry;
 pub mod resize_handler;

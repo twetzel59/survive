@@ -1,12 +1,12 @@
 use sfml::graphics::RenderTarget;
 use super::entity::*;
 
-pub struct EntityManager<'a, 's> {
-    entities: Vec<Box<Entity<'s> + 'a>>,
+pub struct EntityManager<'s> {
+    entities: Vec<Box<Entity<'s> + 's>>,
 }
 
-impl<'a, 's> EntityManager<'a, 's> {
-    pub fn new() -> EntityManager<'a, 's> {
+impl<'s> EntityManager<'s> {
+    pub fn new() -> EntityManager<'s> {
         //let mut entities: Vec<Box<Entity<'s>>> = Vec::new();
         //entities.push(Box::new(DeciduousTree::new(res)));
         
@@ -21,7 +21,19 @@ impl<'a, 's> EntityManager<'a, 's> {
         }
     }
     
+    /*
     pub fn add<T: Entity<'s> + 'a>(&mut self, entity: T) {
+        self.entities.push(Box::new(entity));
+    }
+    */
+    
+    /*
+    pub fn add(&mut self, entity: Box<Entity<'s> + 's>) {
+        self.entities.push(entity);
+    }
+    */
+    
+    pub fn add<T: Entity<'s> + 's>(&mut self, entity: T) {
         self.entities.push(Box::new(entity));
     }
 }
