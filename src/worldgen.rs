@@ -5,7 +5,7 @@ use registry::terrain::Terrain;
 use tiles::TILES_ROW;
 
 pub const WORLD_SIZE: u32 = 512;
-//pub const WORLD_SIZE_HALF: u32 = WORLD_SIZE / 2;
+pub const WORLD_SIZE_HALF: u32 = WORLD_SIZE / 2;
 //pub const PLANT_SECTORS: u32 = 64;
 //pub const PLANT_SKIP: u32 = WORLD_SIZE / 8;
 //pub const PLANT_SKIP_HALF: u32 = PLANT_SKIP / 2;

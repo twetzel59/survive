@@ -21,7 +21,7 @@ impl<'s> DeciduousTree<'s> {
             sprite: Sprite::with_texture(&res.img.deciduous),
         };
         
-        d.sprite.set_color(&Color::rgba(255, 255, 255, 50));
+        d.sprite.set_color(&Color::rgba(255, 255, 255, 100));
         
         let size = res.img.deciduous.size();
         d.sprite.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
