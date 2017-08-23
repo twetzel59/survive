@@ -7,6 +7,7 @@ pub use entities::entity_manager::EntityManager;
 pub use game_window::GameWindow;
 pub use game_window::ScrollBounds;
 pub use mouse_handler::MousePosHandler;
+pub use mouse_handler::MouseClickHander;
 pub use player::Player;
 pub use resize_handler::ResizeHandler;
 pub use resources::Resources;

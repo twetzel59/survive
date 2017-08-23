@@ -1,5 +1,7 @@
 use sfml::graphics::RenderTarget;
+use sfml::system::Vector2i;
 use super::entity::*;
+use mouse_handler::MouseClickHander;
 
 pub struct EntityManager<'s> {
     entities: Vec<Box<Entity<'s> + 's>>,
@@ -35,5 +37,19 @@ impl<'s> EntityManager<'s> {
 
     pub fn add<T: Entity<'s> + 's>(&mut self, entity: T) {
         self.entities.push(Box::new(entity));
+    }
+}
+
+impl<'s> MouseClickHander for EntityManager<'s> {
+    fn mouse_click(&mut self, target: &RenderTarget, mx: i32, my: i32) {
+        let coords = target.map_pixel_to_coords_current_view(&Vector2i::new(mx, my));
+
+        println!("EntityManager click: {:?}", coords);
+
+        for i in &mut self.entities {
+            if i.sprite().global_bounds().contains(coords) {
+                i.on_click();
+            }
+        }
     }
 }

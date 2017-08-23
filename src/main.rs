@@ -47,6 +47,8 @@ fn main() {
             match e {
                 Event::KeyPressed { code: Key::Escape, .. }
                         => break 'mainl,
+                Event::MouseButtonPressed { button, x, y } =>
+                        entitymgr.mouse_click(&win.rwin, x, y),
                 Event::Closed => break 'mainl,
                 Event::Resized { width, height } => {
                     win.on_resize(width, height);

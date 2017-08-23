@@ -32,27 +32,21 @@ impl<'s> DeciduousTree<'s> {
     }
 }
 
-impl<'s> Drawable for DeciduousTree<'s> {
-    fn draw<'se, 'tex, 'sh, 'shte>(
-                                   &'se self,
-                                   target: &mut RenderTarget,
-                                   states: RenderStates<'tex, 'sh, 'shte>)
-        where 'se: 'sh
-    {
-        target.draw_sprite(&self.sprite, states);
-    }
-}
-
 impl<'s> Entity<'s> for DeciduousTree<'s> {
-    /*fn sprite(&self) -> &Sprite<'s> {
+    fn sprite(&self) -> &Sprite<'s> {
         &self.sprite
     }
 
+    /*
     fn sprite_mut(&mut self) -> &mut Sprite<'s> {
         &mut self.sprite
     }*/
 
     fn draw(&self, target: &mut RenderTarget) {
         target.draw(&self.sprite);
+    }
+
+    fn on_click(&mut self) {
+        self.sprite.set_color(&Color::rgba(255, 255, 255, 127));
     }
 }
