@@ -48,7 +48,7 @@ impl<'s> MouseClickHander for EntityManager<'s> {
 
         for i in &mut self.entities {
             if i.sprite().global_bounds().contains(coords) {
-                i.on_click();
+                println!("Dropped: {:?}", i.on_click());
             }
         }
     }

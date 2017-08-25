@@ -38,8 +38,8 @@ fn main() {
             win.rwin.draw(i);
         }
         //win.rwin.draw(&test);
-        win.rwin.draw(&player);
         entitymgr.draw_all(&mut win.rwin);
+        win.rwin.draw(&player);
         ui.draw_all(&mut win.rwin);
         win.rwin.display();
 
@@ -47,7 +47,7 @@ fn main() {
             match e {
                 Event::KeyPressed { code: Key::Escape, .. }
                         => break 'mainl,
-                Event::MouseButtonPressed { button, x, y } =>
+                Event::MouseButtonPressed { button, x, y } if button == mouse::Button::Left =>
                         entitymgr.mouse_click(&win.rwin, x, y),
                 Event::Closed => break 'mainl,
                 Event::Resized { width, height } => {

@@ -1,9 +1,15 @@
+use rand::{self, Rng};
 use sfml::graphics::*;
 use sfml::system::Vector2f;
 use super::entity::Entity;
+use registry::item::{Item, Stack};
 use resources::Resources;
 
+const DROP_MEDIAN: u8 = 10;
+const DROP_VARIATION: u8 = 3;
+
 pub struct DeciduousTree<'s> {
+    harvested: bool,
     sprite: Sprite<'s>,
 }
 
@@ -18,6 +24,7 @@ impl<'s> DeciduousTree<'s> {
 
     pub fn with_position(res: &'s Resources, pos: &Vector2f) -> DeciduousTree<'s> {
         let mut d = DeciduousTree {
+            harvested: false,
             sprite: Sprite::with_texture(&res.img.deciduous),
         };
 
@@ -29,6 +36,17 @@ impl<'s> DeciduousTree<'s> {
         d.sprite.set_position(pos);
 
         d
+    }
+
+    fn harvest(&mut self) -> bool {
+        if self.harvested {
+            return false;
+        }
+
+        self.harvested = true;
+        self.sprite.set_color(&Color::rgba(200, 200, 200, 50));
+
+        true
     }
 }
 
@@ -46,7 +64,13 @@ impl<'s> Entity<'s> for DeciduousTree<'s> {
         target.draw(&self.sprite);
     }
 
-    fn on_click(&mut self) {
-        self.sprite.set_color(&Color::rgba(255, 255, 255, 127));
+    fn on_click(&mut self) -> Option<Stack> {
+        if self.harvest() {
+            Some(Stack { item: Item::Wood,
+                         count: rand::thread_rng().gen_range(
+                                      DROP_MEDIAN - DROP_VARIATION, DROP_MEDIAN + DROP_VARIATION) })
+        } else {
+            None
+        }
     }
 }
