@@ -43,11 +43,14 @@ fn main() {
         ui.draw_all(&mut win.rwin);
         win.rwin.display();
 
+        let dead = stat.dead();
+
         while let Some(e) = win.rwin.poll_event() {
             match e {
                 Event::KeyPressed { code: Key::Escape, .. }
                         => break 'mainl,
-                Event::MouseButtonPressed { button, x, y } if button == mouse::Button::Left =>
+                Event::MouseButtonPressed { button, x, y }
+                    if !dead && button == mouse::Button::Left =>
                         entitymgr.mouse_click(&win.rwin, x, y),
                 Event::Closed => break 'mainl,
                 Event::Resized { width, height } => {
@@ -58,21 +61,26 @@ fn main() {
             }
         }
 
-        let Vector2i { x: mx, y: my } = win.rwin.mouse_position();
-        player.mouse_pos(&win.rwin, mx, my);
+        if dead {
+            ui.set_display_death(true);
+        } else {
+            match player.update(delta, &win) {
+                Some(s) => win.scroll(&s),
+                None => {},
+            };
 
-        match player.update(delta, &win) {
-            Some(s) => win.scroll(&s),
-            None => {},
-        };
+            let Vector2i { x: mx, y: my } = win.rwin.mouse_position();
+            player.mouse_pos(&win.rwin, mx, my);
 
-        if player.is_in_water(&wg.world()) {
-            stat.event(delta, &stats::StatEvent::InWater);
+            if player.is_in_water(&wg.world()) {
+                stat.event(delta, &stats::StatEvent::InWater);
+            }
+            stat.update(delta);
         }
-        stat.update(delta);
 
-        ui.update(&stat);
+        ui.update(delta, &stat);
 
         //println!("{:?}", stat);
+        //println!("dead: {}", stat.dead());
     }
 }

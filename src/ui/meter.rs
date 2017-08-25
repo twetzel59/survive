@@ -2,7 +2,7 @@ use sfml::graphics::*;
 use sfml::system::{Vector2f, Vector2u};
 use resize_handler::ResizeHandler;
 use resources::Resources;
-use super::element::Element;
+use super::element::*;
 
 const PADDING: f32 = 10.;
 const BORDER: f32 = 1.;
@@ -62,13 +62,15 @@ impl<'s> ResizeHandler for Meter<'s> {
     }
 }
 
-impl<'s> Element for Meter<'s> {
+impl<'s> UiDrawable for Meter<'s> {
     fn draw(&self, target: &mut RenderTarget) {
         target.draw(&self.icon);
         target.draw(&self.outer);
         target.draw(&self.inner);
     }
+}
 
+impl<'s> Element for Meter<'s> {
     fn set_position_relative(&mut self, pos: &Vector2f, win_size: &Vector2u) {
         self.rel_pos = *pos;
         self.recalculate(win_size.x, win_size.y);

@@ -9,17 +9,21 @@ impl Stats {
             hydration: Hydration::new(),
         }
     }
-    
+
     pub fn update(&mut self, delta: f32) {
         self.hydration.update(delta);
     }
-    
+
     pub fn event(&mut self, delta: f32, event: &StatEvent) {
         self.hydration.handle(delta, event);
     }
-    
+
     pub fn hydration_level(&self) -> f32 {
         self.hydration.level()
+    }
+
+    pub fn dead(&self) -> bool {
+        self.hydration.fatal()
     }
 }
 
@@ -30,6 +34,7 @@ pub enum StatEvent {
 trait StatComp {
     fn update(&mut self, delta: f32);
     fn handle(&mut self, delta: f32, event: &StatEvent);
+    fn fatal(&self) -> bool;
 }
 
 #[derive(Debug)]
@@ -47,7 +52,7 @@ impl Hydration {
             level: HYDRATION_MAX,
         }
     }
-    
+
     fn level(&self) -> f32 {
         self.level
     }
@@ -56,14 +61,18 @@ impl Hydration {
 impl StatComp for Hydration {
     fn update(&mut self, delta: f32) {
         self.level -= delta * HYDRATION_DEC;
-        
+
         self.level = self.level.min(HYDRATION_MAX);
         self.level = self.level.max(0.);
     }
-    
+
     fn handle(&mut self, delta: f32, event: &StatEvent) {
         match *event {
             StatEvent::InWater => self.level += HYDRATION_INC * delta,
         };
+    }
+
+    fn fatal(&self) -> bool {
+        self.level <= 0.
     }
 }
