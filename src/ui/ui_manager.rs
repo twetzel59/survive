@@ -38,7 +38,7 @@ impl<'s> UiManager<'s> {
 
         let size = target.size();
         let mut view = target.view().to_owned();
-        view.move2f(size.x as f32 / 2., size.y as f32 / 2.);
+        view.set_center2f(size.x as f32 / 2., size.y as f32 / 2.);
         target.set_view(&view);
 
         //let default_view = target.default_view().to_owned();
