@@ -32,8 +32,13 @@ impl<'s> UiManager<'s> {
     pub fn draw_all<T: RenderTarget>(&self, target: &mut T) {
         let old_view = target.view().to_owned();
 
-        let default_view = target.default_view().to_owned();
-        target.set_view(&default_view);
+        let size = target.size();
+        let mut view = target.view().to_owned();
+        view.move2f(size.x as f32 / 2., size.y as f32 / 2.);
+        target.set_view(&view);
+
+        //let default_view = target.default_view().to_owned();
+        //target.set_view(&default_view);
 
         self.hydration.draw(target);
         self.death.draw(target);
