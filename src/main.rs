@@ -3,7 +3,7 @@ extern crate survive;
 
 use sfml::graphics::*;
 use sfml::window::*;
-use sfml::system::{Clock, Vector2i};
+use sfml::system::{Clock, Vector2i, Vector2u};
 use survive::*;
 
 fn main() {
@@ -13,74 +13,89 @@ fn main() {
 
     let res = Resources::new();
 
-    let wg = Worldgen::new();
-    //let test = Sprite::with_texture(&wg.textures[9]);
+    'outer: loop {
+        let wg = Worldgen::new();
+        //let test = Sprite::with_texture(&wg.textures[9]);
 
-    let tilemgr = TileManager::new(wg.textures());
+        let tilemgr = TileManager::new(wg.textures());
 
-    let mut entitymgr = EntityManager::new();
-    //entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
-    //entitymgr.add(Box::new(entities::deciduous_tree::DeciduousTree::new(&res)));
-    plants::generate_plants(&res, wg.world(), &mut entitymgr);
+        let mut entitymgr = EntityManager::new();
+        //entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
+        //entitymgr.add(Box::new(entities::deciduous_tree::DeciduousTree::new(&res)));
+        plants::generate_plants(&res, wg.world(), &mut entitymgr);
 
-    let mut player = Player::new(&res);
+        let mut player = Player::new(&res);
 
-    let mut stat = stats::Stats::new();
+        let mut stat = stats::Stats::new();
 
-    let mut ui = UiManager::new(&res);
+        let mut ui = UiManager::new(&res);
+        let Vector2u { x: width, y: height } = win.rwin.size();
+        ui.on_resize(width, height);
 
-    let mut clock = Clock::start();
-    'mainl: loop {
-        let delta = clock.restart().as_seconds();
+        let mut dead = stat.dead();
+        let mut restart_clock = Clock::start();
 
-        win.rwin.clear(&Color::rgb(180, 215, 255));
-        for i in &tilemgr {
-            win.rwin.draw(i);
-        }
-        //win.rwin.draw(&test);
-        entitymgr.draw_all(&mut win.rwin);
-        win.rwin.draw(&player);
-        ui.draw_all(&mut win.rwin);
-        win.rwin.display();
+        let mut clock = Clock::start();
+        'mainl: loop {
+            let delta = clock.restart().as_seconds();
 
-        let dead = stat.dead();
-
-        while let Some(e) = win.rwin.poll_event() {
-            match e {
-                Event::KeyPressed { code: Key::Escape, .. }
-                        => break 'mainl,
-                Event::MouseButtonPressed { button, x, y }
-                    if !dead && button == mouse::Button::Left =>
-                        entitymgr.mouse_click(&win.rwin, x, y),
-                Event::Closed => break 'mainl,
-                Event::Resized { width, height } => {
-                    win.on_resize(width, height);
-                    ui.on_resize(width, height);
-                },
-                _ => {},
+            win.rwin.clear(&Color::rgb(180, 215, 255));
+            for i in &tilemgr {
+                win.rwin.draw(i);
             }
-        }
+            //win.rwin.draw(&test);
+            entitymgr.draw_all(&mut win.rwin);
+            win.rwin.draw(&player);
+            ui.draw_all(&mut win.rwin);
+            win.rwin.display();
 
-        if dead {
-            ui.set_display_death(true);
-        } else {
-            match player.update(delta, &win) {
-                Some(s) => win.scroll(&s),
-                None => {},
-            };
-
-            let Vector2i { x: mx, y: my } = win.rwin.mouse_position();
-            player.mouse_pos(&win.rwin, mx, my);
-
-            if player.is_in_water(&wg.world()) {
-                stat.event(delta, &stats::StatEvent::InWater);
+            if !dead && stat.dead() {
+                dead = true;
+                restart_clock.restart();
             }
-            stat.update(delta);
+
+            while let Some(e) = win.rwin.poll_event() {
+                match e {
+                    Event::KeyPressed { code: Key::Escape, .. }
+                            => break 'outer,
+                    Event::MouseButtonPressed { button, x, y }
+                        if !dead && button == mouse::Button::Left =>
+                            entitymgr.mouse_click(&win.rwin, x, y),
+                    Event::Closed => break 'outer,
+                    Event::Resized { width, height } => {
+                        win.on_resize(width, height);
+                        ui.on_resize(width, height);
+                    },
+                    _ => {},
+                }
+            }
+
+            if dead {
+                ui.set_display_death(true);
+
+                //println!("restart_clock: {}", restart_clock.elapsed_time().as_seconds());
+                if restart_clock.elapsed_time().as_milliseconds() > 2000 {
+                    continue 'outer;
+                }
+            } else {
+                match player.update(delta, &win) {
+                    Some(s) => win.scroll(&s),
+                    None => {},
+                };
+
+                let Vector2i { x: mx, y: my } = win.rwin.mouse_position();
+                player.mouse_pos(&win.rwin, mx, my);
+
+                if player.is_in_water(&wg.world()) {
+                    stat.event(delta, &stats::StatEvent::InWater);
+                }
+                stat.update(delta);
+            }
+
+            ui.update(delta, &stat);
+
+            //println!("{:?}", stat);
+            //println!("dead: {}", stat.dead());
         }
-
-        ui.update(delta, &stat);
-
-        //println!("{:?}", stat);
-        //println!("dead: {}", stat.dead());
     }
 }
