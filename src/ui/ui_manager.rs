@@ -1,5 +1,6 @@
 use sfml::graphics::*;
 use sfml::system::Vector2f;
+use super::counter::Counter;
 use super::death_screen::DeathScreen;
 use super::element::*;
 use super::meter::Meter;
@@ -9,6 +10,7 @@ use stats::Stats;
 
 pub struct UiManager<'s> {
     hydration: Meter<'s>,
+    wood: Counter<'s>,
     death: DeathScreen<'s>,
     display_death: bool,
 }
@@ -16,7 +18,8 @@ pub struct UiManager<'s> {
 impl<'s> UiManager<'s> {
     pub fn new(res: &'s Resources) -> UiManager<'s> {
         UiManager {
-            hydration: Meter::new(res, &Vector2f::new(0.05, 0.02)),
+            hydration: Meter::new(res, &Vector2f::new(0.02, 0.02)),
+            wood: Counter::new(res, &Vector2f::new(0.02, 0.8)),
             death: DeathScreen::new(res),
             display_death: false,
         }
@@ -24,6 +27,7 @@ impl<'s> UiManager<'s> {
 
     pub fn update(&mut self, delta: f32, current_stats: &Stats) {
         self.hydration.set_value(current_stats.hydration_level());
+        //self.wood.set_value((current_stats.hydration_level() * 255.) as u8);
         if self.display_death {
             self.death.update(delta);
         }
@@ -41,7 +45,10 @@ impl<'s> UiManager<'s> {
         //target.set_view(&default_view);
 
         self.hydration.draw(target);
-        self.death.draw(target);
+        self.wood.draw(target);
+        if self.display_death {
+            self.death.draw(target);
+        }
 
         target.set_view(&old_view);
     }
@@ -54,6 +61,7 @@ impl<'s> UiManager<'s> {
 impl<'s> ResizeHandler for UiManager<'s> {
     fn on_resize(&mut self, width: u32, height: u32) {
         self.hydration.on_resize(width, height);
+        self.wood.on_resize(width, height);
         self.death.on_resize(width, height);
     }
 }

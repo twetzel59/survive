@@ -17,8 +17,6 @@ pub struct Meter<'s> {
 
 impl<'s> Meter<'s> {
     pub fn new(res: &'s Resources, rel_pos: &Vector2f) -> Meter<'s> {
-        let rel_pos = *rel_pos;
-
         let mut outer = RectangleShape::new();
         outer.set_size2f(WIDTH, res.ui.hydration.size().y as f32);
         outer.set_fill_color(&Color::rgb(30, 144, 255));
@@ -31,7 +29,7 @@ impl<'s> Meter<'s> {
             icon: Sprite::with_texture(&res.ui.hydration),
             outer,
             inner,
-            rel_pos,
+            rel_pos: *rel_pos,
         }
     }
 
