@@ -4,6 +4,8 @@ use super::counter::Counter;
 use super::death_screen::DeathScreen;
 use super::element::*;
 use super::meter::Meter;
+use inventory::Inventory;
+use registry::item::Item;
 use resize_handler::ResizeHandler;
 use resources::Resources;
 use stats::Stats;
@@ -25,9 +27,9 @@ impl<'s> UiManager<'s> {
         }
     }
 
-    pub fn update(&mut self, delta: f32, current_stats: &Stats) {
+    pub fn update(&mut self, delta: f32, current_stats: &Stats, current_inv: &Inventory) {
         self.hydration.set_value(current_stats.hydration_level());
-        //self.wood.set_value((current_stats.hydration_level() * 255.) as u8);
+        self.wood.set_value(current_inv.items()[Item::Wood as usize]);
         if self.display_death {
             self.death.update(delta);
         }

@@ -28,6 +28,8 @@ fn main() {
 
         let mut stat = stats::Stats::new();
 
+        let mut inv = Inventory::new();
+
         let mut ui = UiManager::new(&res);
         let Vector2u { x: width, y: height } = win.rwin.size();
         ui.on_resize(width, height);
@@ -60,7 +62,7 @@ fn main() {
                             => break 'outer,
                     Event::MouseButtonPressed { button, x, y }
                         if !dead && button == mouse::Button::Left =>
-                            entitymgr.mouse_click(&win.rwin, x, y),
+                            entitymgr.mouse_click(&mut inv, &win.rwin, x, y),
                     Event::Closed => break 'outer,
                     Event::Resized { width, height } => {
                         win.on_resize(width, height);
@@ -92,10 +94,11 @@ fn main() {
                 stat.update(delta);
             }
 
-            ui.update(delta, &stat);
+            ui.update(delta, &stat, &inv);
 
             //println!("{:?}", stat);
             //println!("dead: {}", stat.dead());
+            //println!("Wood count: {}", inv.items()[0]);
         }
     }
 }

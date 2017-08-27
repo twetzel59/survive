@@ -6,8 +6,8 @@ extern crate sfml;
 pub use entities::entity_manager::EntityManager;
 pub use game_window::GameWindow;
 pub use game_window::ScrollBounds;
+pub use inventory::Inventory;
 pub use mouse_handler::MousePosHandler;
-pub use mouse_handler::MouseClickHander;
 pub use player::Player;
 pub use resize_handler::ResizeHandler;
 pub use resources::Resources;
@@ -18,6 +18,7 @@ pub use worldgen::Worldgen;
 
 pub mod entities;
 pub mod game_window;
+pub mod inventory;
 pub mod mouse_handler;
 pub mod plants;
 pub mod player;
