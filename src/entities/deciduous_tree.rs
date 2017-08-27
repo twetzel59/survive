@@ -38,6 +38,12 @@ impl<'s> DeciduousTree<'s> {
         d
     }
 
+    /*
+    pub fn harveted(&self) -> {
+        self.harvested
+    }
+    */
+
     fn harvest(&mut self) -> bool {
         if self.harvested {
             return false;
@@ -64,13 +70,13 @@ impl<'s> Entity<'s> for DeciduousTree<'s> {
         target.draw(&self.sprite);
     }
 
-    fn on_click(&mut self) -> Option<Stack> {
+    fn on_click(&mut self) -> Stack {
         if self.harvest() {
-            Some(Stack { item: Item::Wood,
-                         count: rand::thread_rng().gen_range(
-                                      DROP_MEDIAN - DROP_VARIATION, DROP_MEDIAN + DROP_VARIATION) })
+            Stack { item: Item::Wood,
+                          count: rand::thread_rng().gen_range(
+                                       DROP_MEDIAN - DROP_VARIATION, DROP_MEDIAN + DROP_VARIATION) }
         } else {
-            None
+            Stack { item: Item::Wood, count: 0 }
         }
     }
 }

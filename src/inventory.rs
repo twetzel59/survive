@@ -15,15 +15,17 @@ impl Inventory {
         &self.items
     }
 
-    pub fn add(&mut self, stack: Stack) { //-> bool {
+    pub fn add(&mut self, stack: Stack) -> bool {
         let idx = stack.item as usize;
 
         if self.items[idx] <= 255 - stack.count {
             self.items[idx] += stack.count;
 
-            //true
+            true
         } else {
-            //false
+            false
         }
+
+        //self.items[idx] += (255 - stack.count).min(stack.count - self.items[idx]);
     }
 }

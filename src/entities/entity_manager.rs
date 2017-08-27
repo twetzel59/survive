@@ -47,10 +47,13 @@ impl<'s> EntityManager<'s> {
         for i in &mut self.entities {
             if i.sprite().global_bounds().contains(coords) {
                 //println!("Dropped: {:?}", i.on_click());
+                inv.add(i.on_click());
+                /*
                 match i.on_click() {
                     Some(s) => inv.add(s),
-                    None => {},
+                    None => false,
                 };
+                */
             }
         }
     }
