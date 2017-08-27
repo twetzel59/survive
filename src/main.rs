@@ -77,6 +77,10 @@ fn main() {
 
                 //println!("restart_clock: {}", restart_clock.elapsed_time().as_seconds());
                 if restart_clock.elapsed_time().as_milliseconds() > 2000 {
+                    let mut view = win.rwin.view().to_owned();
+                    view.set_center2f(0., 0.);
+                    win.rwin.set_view(&view);
+
                     continue 'outer;
                 }
             } else {
