@@ -62,7 +62,7 @@ fn main() {
                             => break 'outer,
                     Event::MouseButtonPressed { button, x, y }
                         if !dead && button == mouse::Button::Left =>
-                            entitymgr.mouse_click(&mut inv, &win.rwin, x, y),
+                            entitymgr.click(&player.position(), &mut inv, &win.rwin, x, y),
                     Event::Closed => break 'outer,
                     Event::Resized { width, height } => {
                         win.on_resize(width, height);
