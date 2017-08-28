@@ -28,7 +28,7 @@ impl<'s> DeciduousTree<'s> {
             sprite: Sprite::with_texture(&res.img.deciduous),
         };
 
-        d.sprite.set_color(&Color::rgba(255, 255, 255, 100));
+        //d.sprite.set_color(&Color::rgba(255, 255, 255, 100));
 
         let size = res.img.deciduous.size();
         d.sprite.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
@@ -68,6 +68,10 @@ impl<'s> Entity<'s> for DeciduousTree<'s> {
 
     fn draw(&self, target: &mut RenderTarget) {
         target.draw(&self.sprite);
+    }
+
+    fn care_about_click(&self) -> bool {
+        true
     }
 
     fn on_click(&mut self) -> Stack {

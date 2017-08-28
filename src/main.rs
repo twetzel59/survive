@@ -22,6 +22,7 @@ fn main() {
         let mut entitymgr = EntityManager::new();
         //entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
         //entitymgr.add(Box::new(entities::deciduous_tree::DeciduousTree::new(&res)));
+        entitymgr.add(entities::bonfire::Bonfire::with_position2f(&res, 128., 128.));
         plants::generate_plants(&res, wg.world(), &mut entitymgr);
 
         let mut player = Player::new(&res);

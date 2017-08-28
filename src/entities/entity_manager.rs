@@ -1,6 +1,6 @@
 use sfml::graphics::RenderTarget;
 use sfml::system::{Vector2f, Vector2i};
-use super::entity::*;
+use super::entity::Entity;
 use inventory::Inventory;
 
 const MAX_REACH: f32 = 100.;
@@ -48,6 +48,11 @@ impl<'s> EntityManager<'s> {
         println!("EntityManager click: {:?}", coords);
 
         for i in &mut self.entities {
+            if !i.care_about_click() {
+                println!("skip");
+                continue;
+            }
+
             let bounds = i.sprite().global_bounds();
             if bounds.contains(coords) {
                 // Center

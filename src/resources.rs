@@ -12,6 +12,7 @@ impl Resources {
             img: Images {
                 player: Texture::from_file("res/img/player.png").unwrap(),
                 deciduous: Texture::from_file("res/img/deciduous.png").unwrap(),
+                bonfire: Texture::from_file("res/img/bonfire.png").unwrap(),
                 //nyan: Texture::from_file("test.png").unwrap(),
             },
             fnt: Fonts {
@@ -32,6 +33,7 @@ impl Resources {
 pub struct Images {
     pub player: Texture,
     pub deciduous: Texture,
+    pub bonfire: Texture,
     //pub nyan: Texture,
 }
 
