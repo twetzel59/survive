@@ -14,4 +14,6 @@ pub trait Entity<'s> {
     fn on_click(&mut self) -> Stack {
         Stack { item: Item::Wood, count: 0 }
     }
+
+    fn update(&mut self, _delta: f32) {}
 }

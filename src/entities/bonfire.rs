@@ -1,10 +1,11 @@
 use sfml::graphics::*;
-use sfml::system::Vector2f;
+use sfml::system::{Vector2f, Vector2u};
 use super::entity::Entity;
 use resources::Resources;
 
 pub struct Bonfire<'s> {
-    sprite: Sprite<'s>,
+    obj: Sprite<'s>,
+    anim: Sprite<'s>,
 }
 
 impl<'s> Bonfire<'s> {
@@ -18,13 +19,19 @@ impl<'s> Bonfire<'s> {
 
     pub fn with_position(res: &'s Resources, pos: &Vector2f) -> Bonfire<'s> {
         let mut b = Bonfire {
-            sprite: Sprite::with_texture(&res.img.bonfire),
+            obj: Sprite::with_texture(&res.img.bonfire),
+            anim: Sprite::with_texture(&res.img.fire_atlas.tex),
         };
 
         let size = res.img.bonfire.size();
-        b.sprite.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
+        b.obj.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
+        b.obj.set_position(pos);
 
-        b.sprite.set_position(pos);
+        let size = res.img.fire_atlas.tex.size() / Vector2u::new(1, res.img.fire_atlas.n_frames);
+
+        b.anim.set_texture_rect(&IntRect::new(0, 0, size.x as i32, size.y as i32));
+        b.anim.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
+        b.anim.set_position(pos);
 
         b
     }
@@ -38,10 +45,15 @@ impl<'s> Entity<'s> for Bonfire<'s> {
     */
 
     fn global_bounds(&self) -> FloatRect {
-        self.sprite.global_bounds()
+        self.obj.global_bounds()
     }
 
     fn draw(&self, target: &mut RenderTarget) {
-        target.draw(&self.sprite);
+        target.draw(&self.obj);
+        target.draw(&self.anim);
+    }
+
+    fn update(&mut self, _delta: f32) {
+
     }
 }
