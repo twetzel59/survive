@@ -31,8 +31,14 @@ impl<'s> Bonfire<'s> {
 }
 
 impl<'s> Entity<'s> for Bonfire<'s> {
+    /*
     fn sprite(&self) -> &Sprite<'s> {
         &self.sprite
+    }
+    */
+
+    fn global_bounds(&self) -> FloatRect {
+        self.sprite.global_bounds()
     }
 
     fn draw(&self, target: &mut RenderTarget) {

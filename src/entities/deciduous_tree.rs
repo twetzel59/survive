@@ -57,14 +57,21 @@ impl<'s> DeciduousTree<'s> {
 }
 
 impl<'s> Entity<'s> for DeciduousTree<'s> {
+    /*
     fn sprite(&self) -> &Sprite<'s> {
         &self.sprite
     }
+    */
 
     /*
     fn sprite_mut(&mut self) -> &mut Sprite<'s> {
         &mut self.sprite
-    }*/
+    }
+    */
+
+    fn global_bounds(&self) -> FloatRect {
+        self.sprite.global_bounds()
+    }
 
     fn draw(&self, target: &mut RenderTarget) {
         target.draw(&self.sprite);

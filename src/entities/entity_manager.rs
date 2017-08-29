@@ -53,7 +53,8 @@ impl<'s> EntityManager<'s> {
                 continue;
             }
 
-            let bounds = i.sprite().global_bounds();
+            //let bounds = i.sprite().global_bounds();
+            let bounds = i.global_bounds();
             if bounds.contains(coords) {
                 // Center
                 let (cx, cy) = (bounds.left + bounds.width / 2.,
