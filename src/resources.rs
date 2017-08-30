@@ -16,6 +16,8 @@ impl Resources {
                 fire_atlas: AnimatedTexture {
                                 tex: Texture::from_file("res/img/fire_atlas.png").unwrap(),
                                 n_frames: 4,
+                                delay: 0.22,
+                                randomize: (true, true),
                             },
                 //nyan: Texture::from_file("test.png").unwrap(),
             },
@@ -45,6 +47,9 @@ pub struct Images {
 pub struct AnimatedTexture {
     pub tex: Texture,
     pub n_frames: u32,
+    pub delay: f32,
+    /// (x, y)
+    pub randomize: (bool, bool)
 }
 
 pub struct Fonts {

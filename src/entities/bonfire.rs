@@ -1,11 +1,13 @@
 use sfml::graphics::*;
 use sfml::system::{Vector2f, Vector2u};
 use super::entity::Entity;
+use super::texture_animator::TextureAnimator;
 use resources::Resources;
 
 pub struct Bonfire<'s> {
-    obj: Sprite<'s>,
-    anim: Sprite<'s>,
+    wood: Sprite<'s>,
+    flame: Sprite<'s>,
+    animator: TextureAnimator,
 }
 
 impl<'s> Bonfire<'s> {
@@ -19,19 +21,20 @@ impl<'s> Bonfire<'s> {
 
     pub fn with_position(res: &'s Resources, pos: &Vector2f) -> Bonfire<'s> {
         let mut b = Bonfire {
-            obj: Sprite::with_texture(&res.img.bonfire),
-            anim: Sprite::with_texture(&res.img.fire_atlas.tex),
+            wood: Sprite::with_texture(&res.img.bonfire),
+            flame: Sprite::with_texture(&res.img.fire_atlas.tex),
+            animator: TextureAnimator::new(&res.img.fire_atlas),
         };
 
         let size = res.img.bonfire.size();
-        b.obj.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
-        b.obj.set_position(pos);
+        b.wood.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
+        b.wood.set_position(pos);
 
         let size = res.img.fire_atlas.tex.size() / Vector2u::new(1, res.img.fire_atlas.n_frames);
 
-        b.anim.set_texture_rect(&IntRect::new(0, 0, size.x as i32, size.y as i32));
-        b.anim.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
-        b.anim.set_position(pos);
+        b.flame.set_texture_rect(&IntRect::new(0, 0, size.x as i32, size.y as i32));
+        b.flame.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
+        b.flame.set_position(pos);
 
         b
     }
@@ -45,15 +48,17 @@ impl<'s> Entity<'s> for Bonfire<'s> {
     */
 
     fn global_bounds(&self) -> FloatRect {
-        self.obj.global_bounds()
+        self.wood.global_bounds()
     }
 
     fn draw(&self, target: &mut RenderTarget) {
-        target.draw(&self.obj);
-        target.draw(&self.anim);
+        target.draw(&self.wood);
+        target.draw(&self.flame);
     }
 
-    fn update(&mut self, _delta: f32) {
+    fn update(&mut self, delta: f32) {
+        self.animator.update(delta);
 
+        self.flame.set_texture_rect(&self.animator.texture_rect());
     }
 }
