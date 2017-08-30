@@ -93,6 +93,8 @@ fn main() {
                 let Vector2i { x: mx, y: my } = win.rwin.mouse_position();
                 player.mouse_pos(&win.rwin, mx, my);
 
+                entitymgr.update(delta);
+
                 if player.is_in_water(&wg.world()) {
                     stat.event(delta, &stats::StatEvent::InWater);
                 }

@@ -1,10 +1,13 @@
 use sfml::graphics::*;
-use sfml::system::Vector2f;
+use sfml::system::{Vector2f, Vector2u};
 use super::entity::Entity;
+use super::texture_animator::TextureAnimator;
 use resources::Resources;
 
 pub struct Bonfire<'s> {
-    sprite: Sprite<'s>,
+    wood: Sprite<'s>,
+    flame: Sprite<'s>,
+    animator: TextureAnimator,
 }
 
 impl<'s> Bonfire<'s> {
@@ -18,13 +21,20 @@ impl<'s> Bonfire<'s> {
 
     pub fn with_position(res: &'s Resources, pos: &Vector2f) -> Bonfire<'s> {
         let mut b = Bonfire {
-            sprite: Sprite::with_texture(&res.img.bonfire),
+            wood: Sprite::with_texture(&res.img.bonfire),
+            flame: Sprite::with_texture(&res.img.fire_atlas.tex),
+            animator: TextureAnimator::new(&res.img.fire_atlas),
         };
 
         let size = res.img.bonfire.size();
-        b.sprite.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
+        b.wood.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
+        b.wood.set_position(pos);
 
-        b.sprite.set_position(pos);
+        let size = res.img.fire_atlas.tex.size() / Vector2u::new(1, res.img.fire_atlas.n_frames);
+
+        b.flame.set_texture_rect(&IntRect::new(0, 0, size.x as i32, size.y as i32));
+        b.flame.set_origin2f(size.x as f32 / 2., size.y as f32 / 2.);
+        b.flame.set_position(pos);
 
         b
     }
@@ -38,10 +48,17 @@ impl<'s> Entity<'s> for Bonfire<'s> {
     */
 
     fn global_bounds(&self) -> FloatRect {
-        self.sprite.global_bounds()
+        self.wood.global_bounds()
     }
 
     fn draw(&self, target: &mut RenderTarget) {
-        target.draw(&self.sprite);
+        target.draw(&self.wood);
+        target.draw(&self.flame);
+    }
+
+    fn update(&mut self, delta: f32) {
+        self.animator.update(delta);
+
+        self.flame.set_texture_rect(&self.animator.texture_rect());
     }
 }

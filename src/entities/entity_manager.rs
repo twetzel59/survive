@@ -25,6 +25,12 @@ impl<'s> EntityManager<'s> {
         }
     }
 
+    pub fn update(&mut self, delta: f32) {
+        for i in &mut self.entities {
+            i.update(delta);
+        }
+    }
+
     /*
     pub fn add<T: Entity<'s> + 'a>(&mut self, entity: T) {
         self.entities.push(Box::new(entity));

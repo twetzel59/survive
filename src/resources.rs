@@ -13,6 +13,12 @@ impl Resources {
                 player: Texture::from_file("res/img/player.png").unwrap(),
                 deciduous: Texture::from_file("res/img/deciduous.png").unwrap(),
                 bonfire: Texture::from_file("res/img/bonfire.png").unwrap(),
+                fire_atlas: AnimatedTexture {
+                                tex: Texture::from_file("res/img/fire_atlas.png").unwrap(),
+                                n_frames: 4,
+                                delay: 0.22,
+                                randomize: (true, true),
+                            },
                 //nyan: Texture::from_file("test.png").unwrap(),
             },
             fnt: Fonts {
@@ -34,7 +40,16 @@ pub struct Images {
     pub player: Texture,
     pub deciduous: Texture,
     pub bonfire: Texture,
+    pub fire_atlas: AnimatedTexture,
     //pub nyan: Texture,
+}
+
+pub struct AnimatedTexture {
+    pub tex: Texture,
+    pub n_frames: u32,
+    pub delay: f32,
+    /// (x, y)
+    pub randomize: (bool, bool)
 }
 
 pub struct Fonts {
