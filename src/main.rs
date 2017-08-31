@@ -19,6 +19,8 @@ fn main() {
 
         let tilemgr = TileManager::new(wg.textures());
 
+        let mut day = DayNight::new();
+
         let mut entitymgr = EntityManager::new();
         //entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
         //entitymgr.add(Box::new(entities::deciduous_tree::DeciduousTree::new(&res)));
@@ -49,7 +51,11 @@ fn main() {
             //win.rwin.draw(&test);
             entitymgr.draw_all(&mut win.rwin);
             win.rwin.draw(&player);
+
+            win.rwin.draw(&day);
+
             ui.draw_all(&mut win.rwin);
+
             win.rwin.display();
 
             if !dead && stat.dead() {
@@ -67,6 +73,7 @@ fn main() {
                     Event::Closed => break 'outer,
                     Event::Resized { width, height } => {
                         win.on_resize(width, height);
+                        day.on_resize(width, height);
                         ui.on_resize(width, height);
                     },
                     _ => {},
@@ -85,6 +92,8 @@ fn main() {
                     continue 'outer;
                 }
             } else {
+                day.update(delta);
+
                 match player.update(delta, &win) {
                     Some(s) => win.scroll(&s),
                     None => {},
@@ -101,11 +110,12 @@ fn main() {
                 stat.update(delta);
             }
 
-            ui.update(delta, &stat, &inv);
+            ui.update(delta, day.time(), &stat, &inv);
 
             //println!("{:?}", stat);
             //println!("dead: {}", stat.dead());
             //println!("Wood count: {}", inv.items()[0]);
+            //println!("current day: {:?}", day);
         }
     }
 }

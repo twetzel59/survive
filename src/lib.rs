@@ -3,6 +3,7 @@ extern crate noise;
 extern crate rand;
 extern crate sfml;
 
+pub use day_night::DayNight;
 pub use entities::entity_manager::EntityManager;
 pub use game_window::GameWindow;
 pub use game_window::ScrollBounds;
@@ -16,6 +17,7 @@ pub use tiles::TileManager;
 pub use ui::ui_manager::UiManager;
 pub use worldgen::Worldgen;
 
+pub mod day_night;
 pub mod entities;
 pub mod game_window;
 pub mod inventory;

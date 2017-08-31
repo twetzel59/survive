@@ -4,3 +4,4 @@ mod counter;
 mod death_screen;
 mod element;
 mod meter;
+mod sundial;
