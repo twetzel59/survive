@@ -4,6 +4,7 @@ use super::counter::Counter;
 use super::death_screen::DeathScreen;
 use super::element::*;
 use super::meter::Meter;
+use super::style;
 use super::sundial::Sundial;
 use inventory::Inventory;
 use registry::item::Item;
@@ -22,8 +23,8 @@ pub struct UiManager<'s> {
 impl<'s> UiManager<'s> {
     pub fn new(res: &'s Resources) -> UiManager<'s> {
         UiManager {
-            hydration: Meter::new(res, &Vector2f::new(0.02, 0.02)),
-            wood: Counter::new(res, &Vector2f::new(0.02, 0.8)),
+            hydration: Meter::new(&res.ui.hydration, &style::HYDRATION_METER, &Vector2f::new(0.02, 0.02)),
+            wood: Counter::new(&res.ui.wood, &res.fnt.normal, &Vector2f::new(0.02, 0.8)),
             death: DeathScreen::new(res),
             display_death: false,
             sundial: Sundial::new(&res, &Vector2f::new(0.02, 0.02)),

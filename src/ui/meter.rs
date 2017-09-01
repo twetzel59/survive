@@ -1,7 +1,6 @@
 use sfml::graphics::*;
 use sfml::system::{Vector2f, Vector2u};
 use resize_handler::ResizeHandler;
-use resources::Resources;
 use super::element::*;
 
 const PADDING: f32 = 10.;
@@ -16,17 +15,21 @@ pub struct Meter<'s> {
 }
 
 impl<'s> Meter<'s> {
-    pub fn new(res: &'s Resources, rel_pos: &Vector2f) -> Meter<'s> {
+    pub fn new(tex: &'s TextureRef, style: &MeterStyle, rel_pos: &Vector2f) -> Meter<'s> {
+        let size = tex.size();
+
         let mut outer = RectangleShape::new();
-        outer.set_size2f(WIDTH, res.ui.hydration.size().y as f32);
-        outer.set_fill_color(&Color::rgb(30, 144, 255));
+        outer.set_size2f(WIDTH, size.y as f32);
+        outer.set_fill_color(&style.outline);
+        //outer.set_fill_color(&Color::rgb(30, 144, 255));
 
         let mut inner = RectangleShape::new();
-        inner.set_size2f(WIDTH - BORDER * 2., res.ui.hydration.size().y as f32 - BORDER * 2.);
-        inner.set_fill_color(&Color::rgb(18, 86, 153));
+        inner.set_size2f(WIDTH - BORDER * 2., size.y as f32 - BORDER * 2.);
+        inner.set_fill_color(&style.fill);
+        //inner.set_fill_color(&Color::rgb(18, 86, 153));
 
         Meter {
-            icon: Sprite::with_texture(&res.ui.hydration),
+            icon: Sprite::with_texture(tex),
             outer,
             inner,
             rel_pos: *rel_pos,
@@ -73,4 +76,9 @@ impl<'s> Element for Meter<'s> {
         self.rel_pos = *pos;
         self.recalculate(win_size.x, win_size.y);
     }
+}
+
+pub struct MeterStyle {
+    pub fill: Color,
+    pub outline: Color,
 }

@@ -1,7 +1,6 @@
 use sfml::graphics::*;
 use sfml::system::{Vector2f, Vector2u};
 use resize_handler::ResizeHandler;
-use resources::Resources;
 use super::element::*;
 
 const OFFSET: Vector2f = Vector2f { x: 32., y: 32. };
@@ -13,10 +12,10 @@ pub struct Counter<'s> {
 }
 
 impl<'s> Counter<'s> {
-    pub fn new(res: &'s Resources, rel_pos: &Vector2f) -> Counter<'s> {
+    pub fn new(tex: &'s TextureRef, font: &'s Font, rel_pos: &Vector2f) -> Counter<'s> {
         Counter {
-            icon: Sprite::with_texture(&res.ui.wood),
-            text: Text::new_init("  0", &res.fnt.normal, 32),
+            icon: Sprite::with_texture(tex),
+            text: Text::new_init("  0", font, 32),
             rel_pos: *rel_pos,
         }
     }
