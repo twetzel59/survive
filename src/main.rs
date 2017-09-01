@@ -14,12 +14,15 @@ fn main() {
     let res = Resources::new();
 
     'outer: loop {
+        let Vector2u { x: width, y: height } = win.rwin.size();
+
         let wg = Worldgen::new();
         //let test = Sprite::with_texture(&wg.textures[9]);
 
         let tilemgr = TileManager::new(wg.textures());
 
         let mut day = DayNight::new();
+        day.on_resize(width, height);
 
         let mut entitymgr = EntityManager::new();
         //entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
@@ -34,7 +37,6 @@ fn main() {
         let mut inv = Inventory::new();
 
         let mut ui = UiManager::new(&res);
-        let Vector2u { x: width, y: height } = win.rwin.size();
         ui.on_resize(width, height);
 
         let mut dead = stat.dead();
