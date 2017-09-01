@@ -27,6 +27,7 @@ impl Resources {
             ui: Ui {
                 hydration: Texture::from_file("res/ui/hydration.png").unwrap(),
                 wood: Texture::from_file("res/ui/wood.png").unwrap(),
+                day_night: Texture::from_file("res/ui/sundial.png").unwrap(),
             },
         };
 
@@ -59,4 +60,5 @@ pub struct Fonts {
 pub struct Ui {
     pub hydration: Texture,
     pub wood: Texture,
+    pub day_night: Texture,
 }

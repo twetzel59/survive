@@ -14,10 +14,15 @@ fn main() {
     let res = Resources::new();
 
     'outer: loop {
+        let Vector2u { x: width, y: height } = win.rwin.size();
+
         let wg = Worldgen::new();
         //let test = Sprite::with_texture(&wg.textures[9]);
 
         let tilemgr = TileManager::new(wg.textures());
+
+        let mut day = DayNight::new();
+        day.on_resize(width, height);
 
         let mut entitymgr = EntityManager::new();
         //entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
@@ -32,7 +37,6 @@ fn main() {
         let mut inv = Inventory::new();
 
         let mut ui = UiManager::new(&res);
-        let Vector2u { x: width, y: height } = win.rwin.size();
         ui.on_resize(width, height);
 
         let mut dead = stat.dead();
@@ -49,7 +53,11 @@ fn main() {
             //win.rwin.draw(&test);
             entitymgr.draw_all(&mut win.rwin);
             win.rwin.draw(&player);
+
+            win.rwin.draw(&day);
+
             ui.draw_all(&mut win.rwin);
+
             win.rwin.display();
 
             if !dead && stat.dead() {
@@ -67,6 +75,7 @@ fn main() {
                     Event::Closed => break 'outer,
                     Event::Resized { width, height } => {
                         win.on_resize(width, height);
+                        day.on_resize(width, height);
                         ui.on_resize(width, height);
                     },
                     _ => {},
@@ -85,6 +94,8 @@ fn main() {
                     continue 'outer;
                 }
             } else {
+                day.update(delta);
+
                 match player.update(delta, &win) {
                     Some(s) => win.scroll(&s),
                     None => {},
@@ -101,11 +112,12 @@ fn main() {
                 stat.update(delta);
             }
 
-            ui.update(delta, &stat, &inv);
+            ui.update(delta, day.time(), &stat, &inv);
 
             //println!("{:?}", stat);
             //println!("dead: {}", stat.dead());
             //println!("Wood count: {}", inv.items()[0]);
+            //println!("current day: {:?}", day);
         }
     }
 }

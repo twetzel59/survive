@@ -4,6 +4,7 @@ use super::counter::Counter;
 use super::death_screen::DeathScreen;
 use super::element::*;
 use super::meter::Meter;
+use super::sundial::Sundial;
 use inventory::Inventory;
 use registry::item::Item;
 use resize_handler::ResizeHandler;
@@ -15,6 +16,7 @@ pub struct UiManager<'s> {
     wood: Counter<'s>,
     death: DeathScreen<'s>,
     display_death: bool,
+    sundial: Sundial<'s>,
 }
 
 impl<'s> UiManager<'s> {
@@ -24,15 +26,18 @@ impl<'s> UiManager<'s> {
             wood: Counter::new(res, &Vector2f::new(0.02, 0.8)),
             death: DeathScreen::new(res),
             display_death: false,
+            sundial: Sundial::new(&res, &Vector2f::new(0.02, 0.02)),
         }
     }
 
-    pub fn update(&mut self, delta: f32, current_stats: &Stats, current_inv: &Inventory) {
+    pub fn update(&mut self, delta: f32, current_day: f32, current_stats: &Stats,
+                  current_inv: &Inventory) {
         self.hydration.set_value(current_stats.hydration_level());
         self.wood.set_value(current_inv.items()[Item::Wood as usize]);
         if self.display_death {
             self.death.update(delta);
         }
+        self.sundial.set_daytime(current_day);
     }
 
     pub fn draw_all<T: RenderTarget>(&self, target: &mut T) {
@@ -48,6 +53,7 @@ impl<'s> UiManager<'s> {
 
         self.hydration.draw(target);
         self.wood.draw(target);
+        self.sundial.draw(target);
         if self.display_death {
             self.death.draw(target);
         }
@@ -65,5 +71,6 @@ impl<'s> ResizeHandler for UiManager<'s> {
         self.hydration.on_resize(width, height);
         self.wood.on_resize(width, height);
         self.death.on_resize(width, height);
+        self.sundial.on_resize(width, height);
     }
 }
