@@ -34,7 +34,7 @@ impl DayNight {
     }
 
     fn daylight(&self) -> Color {
-        let value = if self.time < 0.5 {
+        let mut value = if self.time < 0.5 {
             self.time
         } else {
             1.0 - self.time
@@ -47,7 +47,12 @@ impl DayNight {
         //println!("time: {}", self.time);
 
         //Color::rgba(0, 0, 0, (((value * PI * 2.).sin() * 255.) / 2.) as u8)
-        Color::rgba(0, 0, 0, ((value * PI * 0.5).sin() * MAX_DARK) as u8)
+        value = (value * PI * 0.5).sin() * MAX_DARK;
+        if value < MAX_DARK / 2. {
+            value -= ((value - (MAX_DARK / 2.)).abs().sqrt() * 15.).min(value);
+        }
+
+        Color::rgba(0, 0, 0, value as u8)
     }
 }
 
