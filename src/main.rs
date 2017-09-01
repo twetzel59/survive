@@ -109,7 +109,7 @@ fn main() {
                 if player.is_in_water(&wg.world()) {
                     stat.event(delta, &stats::StatEvent::InWater);
                 }
-                stat.update(delta);
+                stat.update(delta, day.time());
             }
 
             ui.update(delta, day.time(), &stat, &inv);

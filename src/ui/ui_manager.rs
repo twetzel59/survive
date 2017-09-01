@@ -14,6 +14,7 @@ use stats::Stats;
 
 pub struct UiManager<'s> {
     hydration: Meter<'s>,
+    temperature: Meter<'s>,
     wood: Counter<'s>,
     death: DeathScreen<'s>,
     display_death: bool,
@@ -24,6 +25,7 @@ impl<'s> UiManager<'s> {
     pub fn new(res: &'s Resources) -> UiManager<'s> {
         UiManager {
             hydration: Meter::new(&res.ui.hydration, &style::HYDRATION_METER, &Vector2f::new(0.02, 0.02)),
+            temperature: Meter::new(&res.ui.temperature, &style::TEMPERATURE_METER, &Vector2f::new(0.22, 0.02)),
             wood: Counter::new(&res.ui.wood, &res.fnt.normal, &Vector2f::new(0.02, 0.8)),
             death: DeathScreen::new(res),
             display_death: false,
@@ -34,6 +36,7 @@ impl<'s> UiManager<'s> {
     pub fn update(&mut self, delta: f32, current_day: f32, current_stats: &Stats,
                   current_inv: &Inventory) {
         self.hydration.set_value(current_stats.hydration_level());
+        self.temperature.set_value(current_stats.temperature_level());
         self.wood.set_value(current_inv.items()[Item::Wood as usize]);
         if self.display_death {
             self.death.update(delta);
@@ -53,6 +56,7 @@ impl<'s> UiManager<'s> {
         //target.set_view(&default_view);
 
         self.hydration.draw(target);
+        self.temperature.draw(target);
         self.wood.draw(target);
         self.sundial.draw(target);
         if self.display_death {
@@ -70,6 +74,7 @@ impl<'s> UiManager<'s> {
 impl<'s> ResizeHandler for UiManager<'s> {
     fn on_resize(&mut self, width: u32, height: u32) {
         self.hydration.on_resize(width, height);
+        self.temperature.on_resize(width, height);
         self.wood.on_resize(width, height);
         self.death.on_resize(width, height);
         self.sundial.on_resize(width, height);
