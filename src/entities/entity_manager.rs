@@ -1,4 +1,4 @@
-use sfml::graphics::RenderTarget;
+use sfml::graphics::{FloatRect, RenderTarget};
 use sfml::system::{Vector2f, Vector2i};
 use super::entity::{Entity, EntityKind};
 use inventory::Inventory;
@@ -63,14 +63,8 @@ impl<'s> EntityManager<'s> {
             //let bounds = i.sprite().global_bounds();
             let bounds = i.global_bounds();
             if bounds.contains(coords) {
-                // Center
-                let (cx, cy) = (bounds.left + bounds.width / 2.,
-                                bounds.top + bounds.height / 2.);
 
-                let dx = cx - player_pos.x;
-                let dy = cy - player_pos.y;
-
-                if (dx * dx + dy * dy).sqrt() <= MAX_REACH {
+                if Self::close(&bounds, player_pos, MAX_REACH) {
                     //println!("Dropped: {:?}", i.on_click());
                     inv.add(i.on_click());
                     /*
@@ -91,20 +85,21 @@ impl<'s> EntityManager<'s> {
                 _ => break,
             };
 
-            let bounds = i.global_bounds();
-
-            // Center
-            let (cx, cy) = (bounds.left + bounds.width / 2.,
-                            bounds.top + bounds.height / 2.);
-
-            let dx = cx - player_pos.x;
-            let dy = cy - player_pos.y;
-
-            if (dx * dx + dy * dy).sqrt() <= MAX_BONFIRE_DIST {
+            if Self::close(&i.global_bounds(), player_pos, MAX_BONFIRE_DIST) {
                 return true;
             }
         }
 
         false
+    }
+
+    fn close(bounds: &FloatRect, pos: &Vector2f, max_dist: f32) -> bool {
+        let (cx, cy) = (bounds.left + bounds.width / 2.,
+                        bounds.top + bounds.height / 2.);
+
+        let dx = cx - pos.x;
+        let dy = cy - pos.y;
+
+        (dx * dx + dy * dy).sqrt() <= max_dist
     }
 }

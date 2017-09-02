@@ -107,11 +107,11 @@ fn main() {
                 entitymgr.update(delta);
 
                 if player.is_in_water(&wg.world()) {
-                    stat.event(delta, &stats::StatEvent::InWater);
+                    stat.event(&stats::StatEvent::InWater { delta });
                 }
 
                 if entitymgr.near_campfire(&player.position()) {
-                    stat.event(delta, &stats::StatEvent::NearBonfire);
+                    stat.event(&stats::StatEvent::NearBonfire { delta });
                 }
 
                 stat.update(delta, day.daylight());

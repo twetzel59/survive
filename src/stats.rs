@@ -1,14 +1,14 @@
 #[derive(Debug)]
 pub struct Stats {
-    hydration: Hydration,
-    temperature: Temperature,
+    hydration: hydration::Hydration,
+    temperature: temperature::Temperature,
 }
 
 impl Stats {
     pub fn new() -> Stats {
         Stats {
-            hydration: Hydration::new(),
-            temperature: Temperature::new(),
+            hydration: hydration::Hydration::new(),
+            temperature: temperature::Temperature::new(),
         }
     }
 
@@ -17,9 +17,9 @@ impl Stats {
         self.temperature.update(delta, daylight);
     }
 
-    pub fn event(&mut self, delta: f32, event: &StatEvent) {
-        self.hydration.handle(delta, event);
-        self.temperature.handle(delta, event);
+    pub fn event(&mut self, event: &StatEvent) {
+        self.hydration.handle(event);
+        self.temperature.handle(event);
     }
 
     pub fn hydration_level(&self) -> f32 {
@@ -36,99 +36,107 @@ impl Stats {
 }
 
 pub enum StatEvent {
-    InWater,
-    NearBonfire,
+    InWater { delta: f32 },
+    NearBonfire { delta: f32 },
 }
 
 trait StatComp {
     fn level(&self) -> f32;
     fn update(&mut self, delta: f32, daylight: f32);
-    fn handle(&mut self, delta: f32, event: &StatEvent);
+    fn handle(&mut self, event: &StatEvent);
     fn fatal(&self) -> bool;
 }
 
-#[derive(Debug)]
-struct Hydration {
-    level: f32,
-}
+mod hydration {
+    use super::*;
 
-const HYDRATION_MAX: f32 = 1.;
-const HYDRATION_INC: f32 = 0.2;
-const HYDRATION_DEC: f32 = 0.04;
+    #[derive(Debug)]
+    pub struct Hydration {
+        level: f32,
+    }
 
-impl Hydration {
-    fn new() -> Hydration {
-        Hydration {
-            level: HYDRATION_MAX,
+    const MAX: f32 = 1.;
+    const INC: f32 = 0.2;
+    const DEC: f32 = 0.04;
+
+    impl Hydration {
+        pub fn new() -> Hydration {
+            Hydration {
+                level: MAX,
+            }
+        }
+    }
+
+    impl StatComp for Hydration {
+        fn level(&self) -> f32 {
+            self.level.max(0.).min(MAX)
+        }
+
+        fn update(&mut self, delta: f32, daylight: f32) {
+            self.level -= delta * DEC * daylight * daylight;
+
+            self.level = self.level.min(MAX);
+            self.level = self.level.max(0.);
+        }
+
+        fn handle(&mut self, event: &StatEvent) {
+            match *event {
+                StatEvent::InWater { delta } => self.level += INC * delta,
+                _ => {},
+            };
+        }
+
+        fn fatal(&self) -> bool {
+            self.level <= 0.
         }
     }
 }
 
-impl StatComp for Hydration {
-    fn level(&self) -> f32 {
-        self.level.max(0.).min(HYDRATION_MAX)
+mod temperature {
+    use super::*;
+
+    #[derive(Debug)]
+    pub struct Temperature {
+        level: f32,
     }
 
-    fn update(&mut self, delta: f32, daylight: f32) {
-        self.level -= delta * HYDRATION_DEC * daylight * daylight;
+    const MAX: f32 = 1.;
+    const DAYLIGHT_INC_CUTOFF: f32 = 0.8;
+    const DAYLIGHT_DEC_CUTOFF: f32 = 0.6;
+    const INC_ENVIRONMENT: f32 = 0.01;
+    const INC_BONFIRE: f32 = 0.12;
+    const DEC: f32 = 0.08;
 
-        self.level = self.level.min(HYDRATION_MAX);
-        self.level = self.level.max(0.);
-    }
-
-    fn handle(&mut self, delta: f32, event: &StatEvent) {
-        match *event {
-            StatEvent::InWater => self.level += HYDRATION_INC * delta,
-            _ => {},
-        };
-    }
-
-    fn fatal(&self) -> bool {
-        self.level <= 0.
-    }
-}
-
-#[derive(Debug)]
-struct Temperature {
-    level: f32,
-}
-
-const TEMPERATURE_MAX: f32 = 1.;
-const TEMPERATURE_DAYLIGHT_INC_CUTOFF: f32 = 0.8;
-const TEMPERATURE_DAYLIGHT_DEC_CUTOFF: f32 = 0.6;
-const TEMPERATURE_INC_ENVIRONMENT: f32 = 0.01;
-const TEMPERATURE_INC_BONFIRE: f32 = 0.12;
-const TEMPERATURE_DEC: f32 = 0.08;
-
-impl Temperature {
-    fn new() -> Temperature {
-        Temperature {
-            level: TEMPERATURE_MAX,
-        }
-    }
-}
-
-impl StatComp for Temperature {
-    fn level(&self) -> f32 {
-        self.level.max(0.).min(TEMPERATURE_MAX)
-    }
-
-    fn update(&mut self, delta: f32, daylight: f32) {
-        if daylight < TEMPERATURE_DAYLIGHT_DEC_CUTOFF {
-            self.level -= TEMPERATURE_DEC * delta;
-        } else if daylight > TEMPERATURE_DAYLIGHT_INC_CUTOFF {
-            self.level += TEMPERATURE_INC_ENVIRONMENT * delta;
+    impl Temperature {
+        pub fn new() -> Temperature {
+            Temperature {
+                level: MAX,
+            }
         }
     }
 
-    fn handle(&mut self, delta: f32, event: &StatEvent) {
-        match *event {
-            StatEvent::NearBonfire => self.level += TEMPERATURE_INC_BONFIRE * delta,
-            _ => {},
-        };
-    }
+    impl StatComp for Temperature {
+        fn level(&self) -> f32 {
+            self.level.max(0.).min(MAX)
+        }
 
-    fn fatal(&self) -> bool {
-        self.level <= 0.
+        fn update(&mut self, delta: f32, daylight: f32) {
+            if daylight < DAYLIGHT_DEC_CUTOFF {
+                self.level -= DEC * delta;
+            } else if daylight > DAYLIGHT_INC_CUTOFF {
+                self.level += INC_ENVIRONMENT * delta;
+            }
+        }
+
+        fn handle(&mut self, event: &StatEvent) {
+            match *event {
+                StatEvent::NearBonfire { delta } => self.level += INC_BONFIRE * delta,
+                _ => {},
+            };
+        }
+
+        fn fatal(&self) -> bool {
+            self.level <= 0.
+        }
     }
 }
