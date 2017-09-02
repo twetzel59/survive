@@ -1,7 +1,7 @@
 use rand::{self, Rng};
 use sfml::graphics::*;
 use sfml::system::Vector2f;
-use super::entity::Entity;
+use super::entity::{Entity, EntityKind};
 use registry::item::{Item, Stack};
 use resources::Resources;
 
@@ -57,6 +57,10 @@ impl<'s> DeciduousTree<'s> {
 }
 
 impl<'s> Entity<'s> for DeciduousTree<'s> {
+    fn kind(&self) -> EntityKind {
+        EntityKind::DeciduousTree
+    }
+
     /*
     fn sprite(&self) -> &Sprite<'s> {
         &self.sprite

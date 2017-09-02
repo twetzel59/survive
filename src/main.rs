@@ -109,11 +109,17 @@ fn main() {
                 if player.is_in_water(&wg.world()) {
                     stat.event(delta, &stats::StatEvent::InWater);
                 }
-                stat.update(delta, day.time());
+
+                if entitymgr.near_campfire(&player.position()) {
+                    stat.event(delta, &stats::StatEvent::NearBonfire);
+                }
+
+                stat.update(delta, day.daylight());
             }
 
             ui.update(delta, day.time(), &stat, &inv);
 
+            //println!("daylight: {}", day.daylight());
             //println!("{:?}", stat);
             //println!("dead: {}", stat.dead());
             //println!("Wood count: {}", inv.items()[0]);

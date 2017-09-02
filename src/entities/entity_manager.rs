@@ -1,9 +1,10 @@
 use sfml::graphics::RenderTarget;
 use sfml::system::{Vector2f, Vector2i};
-use super::entity::Entity;
+use super::entity::{Entity, EntityKind};
 use inventory::Inventory;
 
 const MAX_REACH: f32 = 100.;
+const MAX_BONFIRE_DIST: f32 = 150.;
 
 pub struct EntityManager<'s> {
     entities: Vec<Box<Entity<'s> + 's>>,
@@ -68,7 +69,8 @@ impl<'s> EntityManager<'s> {
 
                 let dx = cx - player_pos.x;
                 let dy = cy - player_pos.y;
-                if (dx * dx + dy * dy).sqrt() < MAX_REACH {
+
+                if (dx * dx + dy * dy).sqrt() <= MAX_REACH {
                     //println!("Dropped: {:?}", i.on_click());
                     inv.add(i.on_click());
                     /*
@@ -80,5 +82,29 @@ impl<'s> EntityManager<'s> {
                 }
             }
         }
+    }
+
+    pub fn near_campfire(&self, player_pos: &Vector2f) -> bool {
+        for i in &self.entities {
+            match i.kind() {
+                EntityKind::Bonfire => {},
+                _ => break,
+            };
+
+            let bounds = i.global_bounds();
+
+            // Center
+            let (cx, cy) = (bounds.left + bounds.width / 2.,
+                            bounds.top + bounds.height / 2.);
+
+            let dx = cx - player_pos.x;
+            let dy = cy - player_pos.y;
+
+            if (dx * dx + dy * dy).sqrt() <= MAX_BONFIRE_DIST {
+                return true;
+            }
+        }
+
+        false
     }
 }

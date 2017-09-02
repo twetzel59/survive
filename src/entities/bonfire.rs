@@ -1,6 +1,6 @@
 use sfml::graphics::*;
 use sfml::system::{Vector2f, Vector2u};
-use super::entity::Entity;
+use super::entity::{Entity, EntityKind};
 use super::texture_animator::TextureAnimator;
 use resources::Resources;
 
@@ -41,6 +41,10 @@ impl<'s> Bonfire<'s> {
 }
 
 impl<'s> Entity<'s> for Bonfire<'s> {
+    fn kind(&self) -> EntityKind {
+        EntityKind::Bonfire
+    }
+
     /*
     fn sprite(&self) -> &Sprite<'s> {
         &self.sprite

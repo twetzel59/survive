@@ -1,7 +1,14 @@
 use sfml::graphics::{FloatRect, RenderTarget};
 use registry::item::{Item, Stack};
 
+#[derive(Copy, Clone)]
+pub enum EntityKind {
+    DeciduousTree,
+    Bonfire,
+}
+
 pub trait Entity<'s> {
+    fn kind(&self) -> EntityKind;
     fn draw(&self, target: &mut RenderTarget);
     //fn sprite(&self) -> &Sprite<'s>;
     //fn sprite_mut(&mut self) -> &mut Sprite<'s>;

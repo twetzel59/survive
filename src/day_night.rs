@@ -25,7 +25,7 @@ impl DayNight {
             self.time = self.time - 1.;
         }
 
-        let light = self.daylight();
+        let light = self.color();
         self.fader.set_fill_color(&light);
     }
 
@@ -33,7 +33,12 @@ impl DayNight {
         self.time
     }
 
-    fn daylight(&self) -> Color {
+    pub fn daylight(&self) -> f32 {
+        // TODO: fix this backwards implementation of Color -> daylight //
+        1. - self.color().a as f32 / 255.
+    }
+
+    fn color(&self) -> Color {
         let mut value = if self.time < 0.5 {
             self.time
         } else {
