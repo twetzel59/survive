@@ -3,6 +3,7 @@ use sfml::system::{Vector2f, Vector2i};
 use super::entity::{Entity, EntityKind};
 use inventory::Inventory;
 
+const WOOD_PER_BONFIRE: u8 = 10;
 const MAX_REACH: f32 = 100.;
 const MAX_BONFIRE_DIST: f32 = 150.;
 
@@ -84,7 +85,7 @@ impl<'s> EntityManager<'s> {
         for i in &self.entities {
             match i.kind() {
                 EntityKind::Bonfire => {},
-                _ => break,
+                _ => continue,
             };
 
             if Self::close(&i.global_bounds(), player_pos, MAX_BONFIRE_DIST) {
@@ -93,6 +94,28 @@ impl<'s> EntityManager<'s> {
         }
 
         false
+    }
+
+    pub fn spawn_bonfire(&mut self, res: &'s ::resources::Resources,
+                         world: &[::registry::terrain::Terrain], player_pos: &Vector2f,
+                         inv: &mut Inventory, target: &RenderTarget, mx: i32, my: i32) {
+        use ::registry::terrain::Terrain;
+        use ::registry::item::{Item, Stack};
+        use super::bonfire::Bonfire;
+
+        let coords = target.map_pixel_to_coords_current_view(&Vector2i::new(mx, my));
+
+        let d = coords - *player_pos;
+
+        //println!("{:?}", d);
+
+        //if 
+
+        if (d.x * d.x + d.y * d.y).sqrt() <= MAX_REACH {
+            if inv.remove(Stack { item: Item::Wood, count: WOOD_PER_BONFIRE }) {
+                self.add(Bonfire::with_position(res, &coords));
+            }
+        }
     }
 
     fn close(bounds: &FloatRect, pos: &Vector2f, max_dist: f32) -> bool {

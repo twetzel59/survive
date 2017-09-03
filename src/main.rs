@@ -27,7 +27,7 @@ fn main() {
         let mut entitymgr = EntityManager::new();
         //entitymgr.add(entities::deciduous_tree::DeciduousTree::new(&res));
         //entitymgr.add(Box::new(entities::deciduous_tree::DeciduousTree::new(&res)));
-        entitymgr.add(entities::bonfire::Bonfire::with_position2f(&res, 128., 128.));
+        //entitymgr.add(entities::bonfire::Bonfire::with_position2f(&res, 128., 128.));
         plants::generate_plants(&res, wg.world(), &mut entitymgr);
 
         let mut player = Player::new(&res);
@@ -70,8 +70,12 @@ fn main() {
 
             while let Some(e) = win.rwin.poll_event() {
                 match e {
-                    Event::KeyPressed { code: Key::Escape, .. }
-                            => break 'outer,
+                    Event::KeyPressed { code: Key::Escape, .. } => break 'outer,
+                    Event::KeyPressed { code: Key::C, .. } => {
+                        let Vector2i { x, y } = win.rwin.mouse_position();
+                        entitymgr.spawn_bonfire(&res, &wg.world(), &player.position(), &mut inv,
+                                                &win.rwin, x, y);
+                    }
                     Event::MouseButtonPressed { button, x, y }
                         if !dead && button == mouse::Button::Left =>
                             entitymgr.click(&player.position(), &mut inv, &win.rwin, x, y),

@@ -28,4 +28,16 @@ impl Inventory {
 
         //self.items[idx] += (255 - stack.count).min(stack.count - self.items[idx]);
     }
+
+    pub fn remove(&mut self, stack: Stack) -> bool {
+        let idx = stack.item as usize;
+
+        if self.items[idx] >= stack.count {
+            self.items[idx] -= stack.count;
+
+            true
+        } else {
+            false
+        }
+    }
 }
