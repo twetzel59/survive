@@ -14,6 +14,10 @@ pub trait Entity<'s> {
     //fn sprite_mut(&mut self) -> &mut Sprite<'s>;
     fn global_bounds(&self) -> FloatRect;
 
+    fn daylight_affects(&self) -> bool {
+        true
+    }
+
     fn care_about_click(&self) -> bool {
         false
     }

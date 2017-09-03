@@ -51,6 +51,10 @@ impl<'s> Entity<'s> for Bonfire<'s> {
     }
     */
 
+    fn daylight_affects(&self) -> bool {
+        false
+    }
+
     fn global_bounds(&self) -> FloatRect {
         self.wood.global_bounds()
     }

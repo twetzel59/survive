@@ -20,9 +20,11 @@ impl<'s> EntityManager<'s> {
         }
     }
 
-    pub fn draw_all<T: RenderTarget>(&self, target: &mut T) {
+    pub fn draw_all<T: RenderTarget>(&self, target: &mut T, day_lights: bool) {
         for i in &self.entities {
-            i.draw(target);
+            if i.daylight_affects() == day_lights {
+                i.draw(target);
+            }
         }
     }
 
@@ -78,7 +80,7 @@ impl<'s> EntityManager<'s> {
         }
     }
 
-    pub fn near_campfire(&self, player_pos: &Vector2f) -> bool {
+    pub fn near_bonfire(&self, player_pos: &Vector2f) -> bool {
         for i in &self.entities {
             match i.kind() {
                 EntityKind::Bonfire => {},

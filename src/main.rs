@@ -51,10 +51,13 @@ fn main() {
                 win.rwin.draw(i);
             }
             //win.rwin.draw(&test);
-            entitymgr.draw_all(&mut win.rwin);
-            win.rwin.draw(&player);
+            entitymgr.draw_all(&mut win.rwin, true);
 
             win.rwin.draw(&day);
+
+            entitymgr.draw_all(&mut win.rwin, false);
+
+            win.rwin.draw(&player);
 
             ui.draw_all(&mut win.rwin);
 
@@ -110,7 +113,7 @@ fn main() {
                     stat.event(&stats::StatEvent::InWater { delta });
                 }
 
-                if entitymgr.near_campfire(&player.position()) {
+                if entitymgr.near_bonfire(&player.position()) {
                     stat.event(&stats::StatEvent::NearBonfire { delta });
                 }
 
